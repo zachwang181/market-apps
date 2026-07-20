@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>市场 · 产业观察 — App / 动画</title>
+<style>
+  /* ============================================================
+     公共画廊页 · 独立发布(site/publish/)· 三分类:App / 动画 / 视频
+     调性对齐 site/apps/_design:bg #0c0c0e · 面板 #1c1b18 · 边 #4a4740
+     文字 #e8e5de · 次要 #8a8478 · 强调 #c4a882 · 绿 #5ab07a · 红 #e07a7a
+     无外部依赖(字体系统栈)· 深色定装 · 无署名
+     ============================================================ */
+  *{box-sizing:border-box}
+  :root{
+    --bg:#0c0c0e; --panel:#141310; --panel2:#1c1b18; --line:#2a2925; --line2:#3a3832;
+    --ink:#f0ede6; --ink2:#d4d1ca; --dim:#8a8478; --dim2:#5a564c;
+    --gold:#c4a882; --gold-deep:#a98640; --green:#5ab07a; --red:#e07a7a; --amber:#e0b450;
+  }
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink2);
+    font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',Segoe UI,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  body{
+    background:
+      radial-gradient(1100px 620px at 50% -8%, #1a1712 0%, rgba(20,18,14,0) 60%),
+      radial-gradient(900px 500px at 88% 4%, rgba(196,168,130,.06) 0%, rgba(12,12,14,0) 55%),
+      var(--bg);
+  }
+  a{color:inherit}
+
+  /* ---------- Hero ---------- */
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px 84px}
+  .hero{padding:64px 4px 30px;border-bottom:1px solid var(--line);margin-bottom:8px;position:relative}
+  .kicker{font-size:11px;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;font-weight:600;margin-bottom:16px;opacity:.9}
+  .htitle{font-size:38px;line-height:1.12;font-weight:800;color:var(--ink);letter-spacing:-.01em;margin:0 0 14px}
+  .htitle .thin{font-weight:300;color:var(--dim);margin:0 10px}
+  .hsub{font-size:14.5px;line-height:1.75;color:var(--dim);max-width:680px;margin:0}
+  .hsub b{color:var(--ink2);font-weight:600}
+  .hmeta{display:flex;gap:14px;align-items:center;margin-top:22px;font-size:11.5px;color:var(--dim2);flex-wrap:wrap}
+  .hmeta .dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+  .hmeta b{color:var(--dim);font-weight:600}
+
+  /* ---------- Section ---------- */
+  .section{margin-top:40px}
+  .sec-head{display:flex;align-items:baseline;gap:11px;margin-bottom:16px;padding-bottom:9px;border-bottom:1px solid var(--line)}
+  .sec-icon{font-size:15px;position:relative;top:1px}
+  .sec-title{font-size:16.5px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+  .sec-sub{font-size:12px;color:var(--dim)}
+  .sec-count{margin-left:auto;font-size:11px;color:var(--dim2);letter-spacing:.03em}
+
+  /* ---------- 顶部 Tab 切换 ---------- */
+  .tabs{display:inline-flex;gap:4px;background:#161512;border:1px solid var(--line2);border-radius:13px;padding:4px;margin:6px 0 22px}
+  .tab{font-size:14px;color:var(--dim);border:0;background:transparent;border-radius:10px;padding:9px 20px;cursor:pointer;
+    font-weight:600;display:flex;align-items:center;gap:8px;transition:color .14s, background .14s;font-family:inherit}
+  .tab:hover{color:var(--ink2)}
+  .tab.on{background:linear-gradient(180deg,#2a2620,#1c1913);color:var(--ink);box-shadow:0 2px 8px -3px #000}
+  .tab .tico{font-size:15px}
+  .tab .tn{font-size:11px;color:var(--gold);font-weight:700}
+  .pane{display:none;animation:fadein .2s ease}
+  .pane.on{display:block}
+  @keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .pane-sub{font-size:12.5px;color:var(--dim);margin:0 0 16px}
+
+  /* ---------- Grid ---------- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+  .card{position:relative;background:linear-gradient(180deg,var(--panel2) 0%,var(--panel) 100%);
+    border:1px solid var(--line2);border-radius:14px;overflow:hidden;cursor:pointer;
+    transition:transform .16s ease, border-color .16s ease, box-shadow .16s ease}
+  .card:hover{transform:translateY(-3px);border-color:var(--gold);
+    box-shadow:0 14px 34px -14px rgba(0,0,0,.7), 0 0 0 1px rgba(196,168,130,.12)}
+  .card:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+  .thumb{position:relative;height:194px;background:#0a0a0c;border-bottom:1px solid var(--line);overflow:hidden}
+  .thumb iframe{width:1160px;height:660px;border:0;transform:scale(.315);transform-origin:0 0;
+    pointer-events:none;background:#0c0c0e}
+  .thumb .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,12,14,0) 55%,rgba(12,12,14,.72) 100%);pointer-events:none}
+  .thumb .open{position:absolute;right:11px;bottom:11px;font-size:11.5px;color:var(--ink);
+    background:rgba(22,22,19,.82);border:1px solid var(--line2);border-radius:9px;padding:5px 11px;
+    opacity:0;transform:translateY(4px);transition:opacity .16s, transform .16s;backdrop-filter:blur(3px)}
+  .card:hover .thumb .open{opacity:1;transform:translateY(0)}
+  .thumb .open b{color:var(--gold)}
+  .thumb .playbadge{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+  .thumb .playbadge i{width:46px;height:46px;border-radius:50%;background:rgba(20,18,14,.66);border:1px solid var(--gold-deep);
+    display:grid;place-items:center;color:var(--gold);font-size:17px;font-style:normal;backdrop-filter:blur(3px)}
+
+  .pad{padding:15px 17px 17px}
+  .chead{display:flex;align-items:center;gap:11px;margin-bottom:9px}
+  .ico{flex:none;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:19px;
+    background:#221f19;border:1px solid var(--line2)}
+  .ctitle{font-size:15.5px;font-weight:700;color:var(--ink);line-height:1.25;letter-spacing:-.01em}
+  .ckind{display:inline-block;margin-top:3px;font-size:10px;color:var(--gold);border:1px solid var(--gold-deep);
+    background:rgba(196,168,130,.08);border-radius:5px;padding:0 7px;letter-spacing:.03em;font-weight:600}
+  .cdesc{font-size:12.5px;line-height:1.62;color:var(--dim);margin:0 0 13px}
+  .cfoot{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--dim2)}
+  .cfoot .asof b{color:var(--dim);font-weight:600}
+  .cfoot .go{color:var(--dim);transition:color .16s}
+  .card:hover .cfoot .go{color:var(--gold)}
+
+  /* pending 占位卡 */
+  .pcard{border:1px dashed var(--line2);border-radius:14px;background:rgba(20,18,14,.35);
+    min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;
+    padding:26px;text-align:center}
+  .pcard .pico{font-size:26px;opacity:.7}
+  .pcard .pt{font-size:13.5px;color:var(--ink2);font-weight:600}
+  .pcard .ps{font-size:11.5px;color:var(--dim);line-height:1.6;max-width:280px}
+  .pcard .ptag{font-size:10px;color:var(--amber);border:1px solid var(--gold-deep);border-radius:5px;padding:1px 8px}
+
+  .footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--line);
+    font-size:11px;color:var(--dim2);line-height:1.9}
+
+  /* ---------- Lightbox ---------- */
+  .lb{position:fixed;inset:0;z-index:100;display:none;background:rgba(6,6,8,.86);backdrop-filter:blur(6px)}
+  .lb.on{display:flex;flex-direction:column}
+  .lb-bar{flex:none;display:flex;align-items:center;gap:12px;height:56px;padding:0 18px;
+    background:#141310;border-bottom:1px solid var(--line2)}
+  .lb-ico{font-size:19px}
+  .lb-title{font-size:14.5px;font-weight:700;color:var(--ink)}
+  .lb-kind{font-size:10px;color:var(--gold);border:1px solid var(--gold-deep);border-radius:5px;padding:0 7px;font-weight:600}
+  .lb-x{margin-left:auto;width:34px;height:34px;border-radius:9px;border:1px solid var(--line2);
+    background:#1c1b18;color:var(--dim);font-size:17px;cursor:pointer;display:grid;place-items:center;transition:.14s}
+  .lb-x:hover{color:var(--ink);border-color:var(--gold);background:#221f19}
+  .lb-body{flex:1;min-height:0;background:#0c0c0e}
+  .lb-body iframe{width:100%;height:100%;border:0;background:#0c0c0e}
+
+  @media (max-width:560px){
+    .hero{padding:44px 2px 24px}
+    .htitle{font-size:29px}
+    .htitle .thin{display:block;margin:6px 0 0}
+    .grid{grid-template-columns:1fr;gap:16px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="kicker">Market · Industry — Apps / Animation</div>
+    <h1 class="htitle">市场 · 产业观察<span class="thin">／</span>App · 动画</h1>
+    <p class="hsub">台积电财报、AI 泡沫、芯片库存、算力产业链 —— 分成 <b>App 入口 · 动画</b> 两类的自包含市场分析。数字都带来源与截止日期,查不到留白不编。点任意一张即看。</p>
+    <div class="hmeta"><span class="dot"></span><span><b id="mcount">–</b> 项内容</span><span>·</span><span>数据截至 <b>2026-07</b></span></div>
+  </header>
+
+  <main id="sections"></main>
+
+  <footer class="footer" id="foot"></footer>
+</div>
+
+<script>
+  // 每个内容按分类落地址:app 类 → /app/<id>/ · 动画类 → /anim/<id>/(跟顶部 tab 后缀一致,动画不再挂 app 前缀)
+  //   部署(pages.dev):用绝对 /<分类>/<id>/(任意页面路径都解析对)· 本地预览:源都在 ../apps/<id>/
+  var LOCAL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) || location.protocol === 'file:';
+  function itemPath(a){ return LOCAL ? ('../apps/' + a.id + '/') : ('/' + a.cat + '/' + a.id + '/'); }
+  var CACHE_V = '&cv=' + Date.now();   // 每次载入画廊给 app iframe 一个新版本号 → iOS Safari 不吃旧缓存
+
+  // 三分类内容清单
+  var SECTIONS = [
+    { key:'app', icon:'🗂', title:'App 入口', sub:'点开即用的分析小应用', items:[
+      { id:'tsmc-guidance', icon:'📊', title:'台积电 · Q2 财报指引', kind:'指引 App', asof:'2026-07-19',
+        desc:'公司指引 × 市场预期 × 实际,投行观点、市场反应与「下次指引」倒数一屏看清。' },
+      { id:'n429-chip-doi', icon:'📦', title:'芯片库存 DOI 监测', kind:'监测 App', asof:'2026-07-19',
+        desc:'芯片库存天数(DOI)连续变化追踪,配产业链信号与关键时间节点。' },
+      { id:'n426-bubble-panorama', icon:'🫧', title:'AI 泡沫 · 多空全景', kind:'信号盘 App', asof:'2026-07-19',
+        desc:'看多与看空信号清单、机构观点、关键时间线,一屏看清泡沫的两面。' },
+      { id:'n439-bubble-scan', icon:'🧭', title:'标的泡沫检测 · 四维筛选', kind:'筛选 App', asof:'2026-07-19',
+        desc:'概念 × 估值 × 兑现 × 周期 四维,给个股打泡沫档,可按维度筛选。' },
+    ]},
+    { key:'anim', icon:'🎞️', title:'动画', sub:'动起来讲清一件事', items:[
+      { id:'n513-ai-infra-story', icon:'🏭', title:'算力产业链 · 动画', kind:'动画 explainer', asof:'2026-07',
+        motion:true, desc:'一段动画从数据中心讲到芯片,把 AI 基建这条产业链怎么串起来讲清楚。' },
+      { id:'n529-capital-rotation', icon:'💸', title:'资金流出 · 去哪了', kind:'动画 explainer', asof:'2026-07',
+        motion:true, desc:'资金从哪撤出、又轮动去了哪 —— 一段动画把这条资金流讲清楚。' },
+    ]},
+  ];
+
+  var host = document.getElementById('sections');
+  var tabbar = document.createElement('div'); tabbar.className = 'tabs';
+  var panes = document.createElement('div'); panes.id = 'panes';
+  var total = 0;
+
+  function buildCard(a){
+    total++;
+    var url = itemPath(a) + 'index.html?embed=1' + CACHE_V;
+    var card = document.createElement('div');
+    card.className = 'card'; card.tabIndex = 0; card.setAttribute('role','button');
+    card.innerHTML =
+      '<div class="thumb"><iframe loading="lazy" scrolling="no" tabindex="-1" src="'+url+'"></iframe>'+
+        '<div class="scrim"></div>'+
+        (a.motion || a.audio ? '<div class="playbadge"><i>▶</i></div>' : '')+
+        '<div class="open">打开 <b>↗</b></div></div>'+
+      '<div class="pad">'+
+        '<div class="chead"><div class="ico">'+a.icon+'</div>'+
+          '<div><div class="ctitle">'+a.title+'</div><span class="ckind">'+a.kind+'</span></div></div>'+
+        '<p class="cdesc">'+a.desc+'</p>'+
+        '<div class="cfoot"><span class="asof">更新 <b>'+a.asof+'</b></span><span class="go">打开 ↗</span></div>'+
+      '</div>';
+    card.addEventListener('click', function(){ openItem(a); });
+    card.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();openItem(a);} });
+    return card;
+  }
+
+  SECTIONS.forEach(function(sec, si){
+    var btn = document.createElement('button');
+    btn.className = 'tab' + (si===0 ? ' on' : '');
+    btn.dataset.idx = si; btn.dataset.key = sec.key;
+    btn.innerHTML = '<span class="tico">'+sec.icon+'</span>'+sec.title+'<span class="tn">'+sec.items.length+'</span>';
+    tabbar.appendChild(btn);
+
+    var pane = document.createElement('div');
+    pane.className = 'pane' + (si===0 ? ' on' : '');
+    pane.dataset.idx = si;
+    var sub = document.createElement('div'); sub.className = 'pane-sub'; sub.textContent = sec.sub;
+    var g = document.createElement('div'); g.className = 'grid';
+    sec.items.forEach(function(a){ a.cat = sec.key; g.appendChild(buildCard(a)); });
+    pane.appendChild(sub); pane.appendChild(g);
+    panes.appendChild(pane);
+  });
+
+  host.appendChild(tabbar); host.appendChild(panes);
+
+  // ---------- 分类 tab = URL 后缀(可直达 / 可分享 / 前进后退跟随) ----------
+  // /app → App 入口 · /anim → 动画 · 切 tab 改后缀不刷新 · 直接开 /app 或 /anim 就落到对应分类
+  function selectTab(key){
+    tabbar.querySelectorAll('.tab').forEach(function(x){ x.classList.toggle('on', x.dataset.key===key); });
+    panes.querySelectorAll('.pane').forEach(function(x){ x.classList.toggle('on', SECTIONS[x.dataset.idx].key===key); });
+  }
+  function keyFromPath(){
+    var m = location.pathname.match(/\/(app|anim)(?:\/|$)/);
+    return (m && m[1]) || SECTIONS[0].key;
+  }
+  tabbar.addEventListener('click', function(e){
+    var b = e.target.closest('.tab'); if(!b) return;
+    selectTab(b.dataset.key);
+    history.pushState({tab:b.dataset.key}, '', '/' + b.dataset.key);
+  });
+  window.addEventListener('popstate', function(){ selectTab(keyFromPath()); });
+  selectTab(keyFromPath());   // 载入时按后缀选分类
+
+  document.getElementById('mcount').textContent = total;
+  document.getElementById('foot').innerHTML =
+    '独立发布 · 深色定装 · 数据均标注来源与截止日期,查不到不编造。<br>每项内容为自包含模块 —— 更新数据只改各自的 data.json,不动这张画廊页。';
+
+  // ---------- 打开 = 跳到本站该内容的分类子路径页(同站后缀,不另开站) ----------
+  // app 类 → /app/<id>/ · 动画类 → /anim/<id>/ · 点开换到该内容全屏页 · 浏览器回退即回画廊。
+  function openItem(a){ location.href = itemPath(a); }
+</script>
+</body>
+</html>

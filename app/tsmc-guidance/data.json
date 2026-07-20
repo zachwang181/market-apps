@@ -1,0 +1,94 @@
+{
+  "meta": {
+    "title": "台积电 · Q2 财报指引",
+    "icon": "📊",
+    "kind": "指引 App",
+    "asof": "2026-07-19"
+  },
+  "_data_note": "Researcher 2026-07-19 实查:Q2/Q3 官方数字以台积电英文新闻稿(pr.tsmc.com/english/news/3326)为一手源,TrendForce/Zacks/CNBC 等英文源交叉。薄弱环节:高盛目标价单源(Tiger Brokers)、Q2 共识仅 Zacks 一家。台股目标价 NT$ 与 ADR 美元目标价已分别标注。",
+  "modules": [
+    {
+      "type": "numcompare", "icon": "🧭", "title": "本次指引 vs 此前(N428 要验的事)", "asof": "2026-07-16",
+      "sources": [
+        { "label": "TSMC 官方新闻稿", "url": "https://pr.tsmc.com/english/news/3326" },
+        { "label": "TrendForce", "url": "https://www.trendforce.com/news/2026/07/16/news-tsmc-lifts-2026-capex-15-to-60-64b-hikes-sales-outlook-to-over-40-despite-q3-margin-dip/" }
+      ],
+      "data": {
+        "cols": ["此前", "本次(7/16)"],
+        "rows": [
+          { "label": "全年营收增速(USD)", "vals": ["~30%", "40%+"], "verdict": "beat" },
+          { "label": "2026 CapEx", "vals": ["$52–56B", "$60–64B(+15%)"] },
+          { "label": "Q3 营收指引", "vals": ["—", "$44.6–45.8B"] },
+          { "label": "Q3 毛利率指引", "vals": ["—", "65%–67%"] }
+        ]
+      },
+      "note": "结论:没有下调、反而大幅上调(30%→40%+,归因 AI 需求超预期)—— 与「AI CapEx 放缓」叙事相反。Q3 毛利率指引被普遍解读为低于预期(2nm 爬坡稀释 3–4pp + 海外厂 2–3pp,CFO 黄仁昭),共识具体数字未查到。"
+    },
+    {
+      "type": "numcompare", "icon": "📐", "title": "Q2 预期 vs 实际", "asof": "2026-07-16",
+      "sources": [
+        { "label": "TSMC 官方新闻稿", "url": "https://pr.tsmc.com/english/news/3326" },
+        { "label": "Zacks via Yahoo", "url": "https://finance.yahoo.com/markets/stocks/articles/taiwan-semiconductor-q2-earnings-beat-150200488.html" }
+      ],
+      "data": {
+        "cols": ["公司指引", "市场预期", "实际"],
+        "rows": [
+          { "label": "Q2 营收", "vals": ["$39.0–40.2B", "~$39.6B", "$40.20B"], "verdict": "beat" },
+          { "label": "Q2 毛利率", "vals": ["65.5%–67.5%", "—", "67.7%"], "verdict": "beat" },
+          { "label": "Q2 EPS(ADR)", "vals": ["—", "~$3.88", "$4.31"], "verdict": "beat" }
+        ]
+      },
+      "note": "营收 YoY +33.7%(USD)· 指引区间顶格再略超 · EPS 超共识 11.4%(Zacks 单家,弱交叉)。此前指引出自 4/16 Q1 法说。"
+    },
+    {
+      "type": "opinions", "icon": "🏦", "title": "投行观点(财报前后)",
+      "asof": "2026-07-17",
+      "sources": [
+        { "label": "BigGo Finance 台媒整理", "url": "https://finance.biggo.com/news/8d2bab45-9308-4fcf-8d28-1279dc13d402" }
+      ],
+      "data": { "items": [
+        { "who": "大摩", "dir": "增持", "tp": "NT$2,988", "up": 1, "q": "AI 半导体营收增速大超此前预测,70–80% 增长动能合理(7/17 call 后上调)", "src": { "label": "BigGo 7/17", "url": "https://finance.biggo.com/news/8d2bab45-9308-4fcf-8d28-1279dc13d402" } },
+        { "who": "高盛", "dir": "买入", "tp": "NT$3,000", "up": 1, "q": "上调 2027/28 CapEx 预测至 $78B/$82B —— CapEx 周期未见顶(call 后上调;单源待复核)", "src": { "label": "Tiger Brokers", "url": "https://www.itiger.com/news/1152215838" } },
+        { "who": "小摩", "dir": "增持", "tp": "NT$3,100", "up": 1, "q": "2027–29 显著扩产,近期毛利率维持高位,反击份额流失担忧(7/7 call 前设定)", "src": { "label": "BigGo 7/7", "url": "https://finance.biggo.com/news/fb07c8e3-5e4f-4d91-a763-dde625459318" } },
+        { "who": "花旗", "dir": "买入", "tp": "NT$3,800", "up": 1, "q": "街最高目标价,最乐观情形挑战 NT$4,000(7/7 call 前设定 · call 后未见撤回)", "src": { "label": "BigGo 7/7", "url": "https://finance.biggo.com/news/fb07c8e3-5e4f-4d91-a763-dde625459318" } },
+        { "who": "美银", "dir": "—", "tp": "NT$3,100", "up": 1, "q": "AI 是最大增长引擎;2027–28 CapEx 将攀至 $78–83B(7/17 call 后维持)", "src": { "label": "BigGo 7/17", "url": "https://finance.biggo.com/news/8d2bab45-9308-4fcf-8d28-1279dc13d402" } },
+        { "who": "Barclays", "dir": "增持", "tp": "$650(ADR)", "up": 1, "q": "财报净正面,2026 营收指引高于预期,AI 需求持续(7/17 上调)", "src": { "label": "MarketBeat", "url": "https://www.marketbeat.com/instant-alerts/taiwan-semiconductor-manufacturing-nysetsm-stock-price-expected-to-rise-barclays-analyst-says-2026-04-22/" } },
+        { "who": "UBS", "dir": "—", "q": "「意外的 CapEx 上调」强化对 AI 供应链的信心", "src": { "label": "ZeroHedge 转述", "url": "https://www.zerohedge.com/markets/ubs-tsmcs-surprise-capex-hike-reinforces-confidence-ai-supply-chain" } }
+      ] },
+      "note": "台股目标价为 NT$ · Barclays 为 ADR 美元 · 两种口径别混看。"
+    },
+    {
+      "type": "minichart", "icon": "📉", "title": "市场反应(财报日 7/16)", "asof": "2026-07-17",
+      "sources": [
+        { "label": "BigGo Finance", "url": "https://finance.biggo.com/news/49a3ffba-fc2a-4152-a46f-5a54110537e8" },
+        { "label": "FXLeaders", "url": "https://www.fxleaders.com/news/2026/07/17/tsm-stock-slips-2-3-despite-record-profit-as-ai-demand-meets-capex-concerns/" }
+      ],
+      "data": {
+        "kind": "bars", "unit": "%",
+        "series": [
+          { "label": "TSM ADR", "v": -2.32 },
+          { "label": "费半 SOX", "v": -4.29 },
+          { "label": "NVDA", "v": -2.38 },
+          { "label": "MU", "v": -5.56 },
+          { "label": "SK海力士ADR", "v": -8.62 }
+        ],
+        "note": "「beat 但大跌」:CapEx 上调压 FCF + 毛利率稀释担忧 + 追加 $100B 美国投资;7/17 盘中再跌 >5% 失守 $400(两个月新低)。注意费半 7/16 全行业大跌(-4.29%),非仅台积电因素。"
+      }
+    },
+    {
+      "type": "timeline", "icon": "🗓", "title": "下次指引", "state": "pending",
+      "pendingHint": "3Q26 法说会日期官方未公布(惯例 10 月中 · 参考 3Q25=10/16)· 盯 investor.tsmc.com/english/financial-calendar"
+    },
+    {
+      "type": "searchrow", "icon": "🔍", "title": "快捷入口",
+      "data": { "chips": [
+        { "label": "𝕏 搜 $TSM 指引", "url": "https://x.com/search?q=%24TSM%20guidance" },
+        { "label": "𝕏 dnystedt(半导体记者)", "url": "https://x.com/dnystedt" },
+        { "label": "Google 财报新闻", "url": "https://www.google.com/search?q=TSMC+Q3+2026+guidance" },
+        { "label": "📄 官方新闻稿(Q2)", "url": "https://pr.tsmc.com/english/news/3326" },
+        { "label": "📅 台积电 IR 日历", "url": "https://investor.tsmc.com/english/financial-calendar" },
+        { "label": "🏛 SEC EDGAR 6-K", "url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001046179&type=6-K" }
+      ] }
+    }
+  ]
+}

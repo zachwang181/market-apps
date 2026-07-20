@@ -1,0 +1,160 @@
+{
+  "meta": {
+    "title": "AI泡沫 · 多空全景",
+    "icon": "🫧",
+    "kind": "信号盘 App",
+    "asof": "2026-07-19"
+  },
+  "modules": [
+    {
+      "type": "rawtable", "icon": "🎯", "title": "信号计分板(N426 五信号 × 调研证据)", "asof": "2026-07-19",
+      "sources": [
+        { "label": "调研原文 §5(relation/N426/001)", "url": "" },
+        { "label": "BofA FMS 7月(247wallst)", "url": "https://247wallst.com/investing/2026/07/15/bank-of-america-says-long-semiconductors-is-the-most-crowded-trade-ever/" },
+        { "label": "华为份额(Bernstein via techxplore)", "url": "https://techxplore.com/news/2026-06-nvidia-ai-chip-sales-china.html" }
+      ],
+      "note": "研判(§4):空头已进机构主流话语体系,但资金流尚未转向——「嘴上都说是泡沫,手上仍在加仓」的典型晚周期特征;核心信号①在2026实际数据中尚未兑现(反而加速)。共识已从「要不要谈泡沫」转向「何时/如何破裂」的阶段性辩论,更新信号盘时须区分「已发生」vs「被广泛预期但未兑现」。",
+      "data": {
+        "cols": ["信号", "证据状态", "关键证据"],
+        "rows": [
+          ["①云厂商CapEx增速连续两季放缓", "⚪ 未确认 · 与2026实际相反", "2026年CapEx预计+76%至$6730亿仍加速创纪录;放缓是对2027(+25%)/2028(+6%)的预期,尚未兑现 → 应标「预期中/未触发」"],
+          ["②芯片库存天数上升", "🟡 信号混杂", "先进AI芯片(Nvidia/TSMC CoWoS)仍产能紧张;但Meta自曝闲置算力转售(Meta Compute),云端算力层面现早期过剩迹象;内存反而涨价缺货(方向相反)"],
+          ["③股价涨幅远超盈利增速(P/E扩张)", "🟠 部分确认 · 分化", "龙头Nvidia远期P/E约22-27倍相对克制;二三线(CoreWeave P/S 9.35、Nebius P/E 100倍负EBITDA)已脱离基本面;标普盈利增速预期20.2%超2000年泡沫峰值18.6%"],
+          ["④机构持仓集中度历史极值", "🔴 强确认", "BofA 7月调查(210经理·$5550亿AUM):82%称「做多全球半导体」为史上最拥挤交易(纪录);45%列AI泡沫为头号尾部风险(上月28%);现金4.1%→3.6%触发逆向卖出信号"],
+          ["⑤中国/自研芯片实质性替代", "🔴 强确认 · 加速中", "华为在华AI芯片份额从2025年约40%升至近50%;Nvidia同期降至约8%(Bernstein估算)"]
+        ]
+      }
+    },
+    {
+      "type": "minichart", "icon": "📈", "title": "云厂商 CapEx 同比增速 · 「放缓」尚未发生", "asof": "2026-07-19",
+      "sources": [
+        { "label": "Morgan Stanley(Yahoo)", "url": "https://finance.yahoo.com/news/morgan-stanley-says-hyperscaler-ai-151112648.html" }
+      ],
+      "data": {
+        "kind": "bars", "unit": "%",
+        "series": [
+          { "label": "2026(预计)", "v": 76 },
+          { "label": "2027E", "v": 25 },
+          { "label": "2028E", "v": 6 }
+        ],
+        "note": "2026约$6730亿仍加速创纪录(调研原文两处口径+76%/+77%);大摩把五大云厂商合计预测从$4500亿上修到$8050亿;CapEx/营收比2026-28达34%/39%/37%,超互联网泡沫约32%——「放缓」全是2027-28的预期,不是当下数据"
+      }
+    },
+    {
+      "type": "opinions", "icon": "🐻", "title": "空头阵营(10)", "asof": "2026-07-19",
+      "sources": [{ "label": "全部一手/权威二手英文源 · 详各卡", "url": "" }],
+      "data": { "items": [
+        { "who": "Michael Burry(前Scion创始人 ·《大空头》原型)", "dir": "做空", "up": -1,
+          "q": "6/30、7/2 Substack披露做空NVDA/TSLA/AMAT/CAT/SOXX/MU;云厂商拉长GPU折旧年限(微软4→6年·Meta 5.5年)人为压低折旧做高利润,2026-28累计少计约$1760亿;Amazon反而缩短至5年——「各说各话」的会计操纵迹象 → 信号③",
+          "src": { "label": "Burry Substack 7/8原帖(已直接抓取核实)", "url": "https://michaeljburry.substack.com/p/short-thoughts-july-8-2026-nvda-neos" } },
+        { "who": "Jim Chanos(Kynikos创始人 · 传奇做空者)", "dir": "看空", "up": -1,
+          "q": "AI泡沫「比互联网泡沫更糟糕」;做空数据中心/neo-cloud——CoreWeave P/S 9.35倍·ROE -41%·Q1净亏$7.4亿,Nebius P/E 100倍负EBITDA;类比1999电信商「订1万台路由器实际只需2千台」,称机制完全相同 → 信号②③",
+          "src": { "label": "Yahoo Finance", "url": "https://finance.yahoo.com/news/jim-chanos-warns-ai-spending-171853416.html" } },
+        { "who": "Gary Marcus(认知科学家 · OG GenAI Skeptic)", "dir": "看空", "up": -1,
+          "q": "「An entire industry is being propped up by math that is literally insane」;引Wharton/Point72研究:需生产率提升2.7倍且连续十年年销售增长50%才能justify当前CapEx;预测2026被历史记住为散户和指数基金接盘之年 → 信号①③",
+          "src": { "label": "Gary Marcus X原帖", "url": "https://x.com/garymarcus/status/2064020667004334577" } },
+        { "who": "Goldman Sachs · Jim Covello(全球股票研究主管)", "dir": "质疑ROI", "up": -1,
+          "q": "「Too Much Spend, Too Little Benefit」;引MIT研究:企业已投$300-400亿GenAI但95%机构无可衡量回报;微软/亚马逊/Alphabet/Meta合计AI CapEx已超经营现金流100%,「像橡皮筋一样被拉伸」 → 信号①",
+          "src": { "label": "GS官方(A skeptical look at AI investment)", "url": "https://www.goldmansachs.com/insights/goldman-sachs-exchanges/a-skeptical-look-at-ai-investment" } },
+        { "who": "Morgan Stanley(研究团队 · 机构立场)", "dir": "警示", "up": -1,
+          "q": "云厂商AI CapEx「规模和持续时长都将超过互联网泡沫时期电信CapEx」;CapEx/营收比2026-28达34%/39%/37%,超泡沫期约32%;CEO Ted Pick另警告2026或有10-15%回调 → 信号①③",
+          "src": { "label": "Yahoo/Morgan Stanley", "url": "https://finance.yahoo.com/news/morgan-stanley-says-hyperscaler-ai-151112648.html" } },
+        { "who": "Owen Lamont(Acadian高级PM · Owenomics)", "dir": "看空", "up": -1,
+          "q": "「today's optimism is yet another way in which 2026 is looking like 1999」;1985年以来分析师平均预测盈利增速13%实际仅7%,当前预期20.2%已超2000年峰值18.6%;另批NVDA-OpenAI-Oracle「循环交易」类比vendor financing崩溃模式 → 信号③",
+          "src": { "label": "Acadian「循环交易」专文", "url": "https://www.acadian-asset.com/investment-insights/owenomics/straight-talk-about-circular-deals-in-ai" } },
+        { "who": "Peter Berezin(BCA Research首席全球策略师)", "dir": "看空 · 非短期", "up": -1,
+          "q": "定性「盈利泡沫」而非估值泡沫;所有泡沫终将破裂但「并非迫在眉睫」;若/当破裂估计股市跌30%-50%;AI基建推高电力/内存/数据中心成本,可能抬升通胀而非降低 → 信号①③(定性但非短期确认)",
+          "src": { "label": "BCA Research", "url": "https://www.bcaresearch.com/reports/earnings-bubbles-are-still-bubbles-28-05-2026/219011" } },
+        { "who": "BofA全球基金经理调查(7/2-9 · 210经理 · $5550亿AUM)", "dir": "调查数据", "up": -1,
+          "q": "82%称「做多全球半导体」史上最拥挤交易(创纪录,远超「做多Mag7」的7%);45%列AI泡沫头号尾部风险(上月28%,首超「二次通胀」);现金4.1%→3.6%触发BofA现金规则逆向卖出信号 → 信号④",
+          "src": { "label": "247wallst", "url": "https://247wallst.com/investing/2026/07/15/bank-of-america-says-long-semiconductors-is-the-most-crowded-trade-ever/" } },
+        { "who": "Meta自身行动(公司公告 · 非空头表态)", "dir": "行动信号",
+          "q": "7/1宣布「Meta Compute」转售自身闲置AI算力(当日股价反涨8.8%,但引发AI硬件板块抛售);分析师解读:年CapEx $1150-1350亿的巨头「净卖出算力」,意味其他云厂商同等开支未来也可能形成过剩 → 信号②(市场解读)",
+          "src": { "label": "CNBC", "url": "https://www.cnbc.com/2026/07/01/meta-stock-cloud-ai-compute.html" } },
+        { "who": "Anomaly Investment Partners(Substack · ⚠️作者身份待确认)", "dir": "看空 · 权重降级", "up": -1,
+          "q": "「This Obviously is an AI Bubble. The Math Says So」——资本投入远超任何合理假设下可能产生的营收,符合资本错配型泡沫特征 → 信号①③ · 多轮搜索未能确认作者真实身份,权重低于具名机构/个人",
+          "src": { "label": "anomalyinvestments.substack.com", "url": "https://anomalyinvestments.substack.com/p/this-obviously-is-an-ai-bubble-the" } }
+      ] }
+    },
+    {
+      "type": "opinions", "icon": "🐂", "title": "多头阵营(7)", "asof": "2026-07-19",
+      "sources": [{ "label": "全部一手/权威二手英文源 · 详各卡", "url": "" }],
+      "data": { "items": [
+        { "who": "Jensen Huang(Nvidia CEO)", "dir": "看多", "up": 1,
+          "q": "CapEx担忧被「人类历史上最大规模的基建建设」冲淡;agentic AI算力两年内增长1000%;「这种计算方式回不去了」 · 注:其「Blackwell出货后Hopper送人都没人要」的说法反被Burry引用佐证GPU快速贬值(⚠️经Burry转引,未找到一手原话出处)",
+          "src": { "label": "Fortune 1/21", "url": "https://fortune.com/2026/01/21/jensen-huang-on-ai-bubble-largest-infrastructure-buildout-history/" } },
+        { "who": "Dan Ives(⚠️2026年已离职Wedbush另起炉灶)", "dir": "看多", "up": 1,
+          "q": "「科技资本开支超级周期才刚刚开始」,当前是「棒球赛第3局1出局」;但也承认2026是「AI支出必须开始显示回报」的关键年(留有余地,非无条件看多)",
+          "src": { "label": "Stocktwits", "url": "https://stocktwits.com/news-articles/markets/equity/dan-ives-claps-back-ai-bubble-bears-trillions-spending-tech-bull-market/cLeOiuPREq3" } },
+        { "who": "Tom Lee(Fundstrat研究主管 · 永久多头)", "dir": "看多", "up": 1,
+          "q": "1999年买「互联网一篮子」持有至今,即便90%个股归零仍跑赢标普500,AI同理;AI是「我们这代人最重要的结构性叙事之一」;6月上调标普目标至8000点",
+          "src": { "label": "CNBC 6/25", "url": "https://www.cnbc.com/2026/06/25/fundstrats-lee-joins-wall-street-bulls-in-calling-for-sp-at-8000.html" } },
+        { "who": "Ohsung Kwon(Wells Fargo首席股票策略师)", "dir": "承认泡沫仍看多", "up": 1,
+          "q": "5/12研报「Own AI」:承认市场情绪euphoric,但涨幅由强劲EPS动能驱动,「我们暂未看到太多下行风险」——罕见的「承认是泡沫但主张继续骑乘」式多头",
+          "src": { "label": "Fortune", "url": "https://fortune.com/2026/05/13/ai-euphoric-bubble-buy-it-wells-fargo/" } },
+        { "who": "George Lee(高盛全球研究院联席负责人)", "dir": "长期规模测算", "up": 1,
+          "q": "「Tracking Trillions」:测算2026-31全球AI基建累计CapEx达$7.6万亿;同时承认芯片折旧年限是最大变量(5年缩至3年=年折旧成本增近$1万亿)——高盛内部Covello(疑ROI)与Lee(测规模)两种声音并存,不是铁板一块",
+          "src": { "label": "GS Tracking Trillions", "url": "https://www.goldmansachs.com/insights/articles/tracking-trillions-the-assumptions-shaping-scale-of-the-ai-build-out" } },
+        { "who": "Larry Fink(BlackRock董事长兼CEO)", "dir": "看多", "up": 1,
+          "q": "达沃斯:AI正创造「新的万亿美元资产类别」;「短期或许过度投资,但长期需求会追上来」;定性「供给紧缺、不是泡沫」·百年一遇;同时承认会有AI公司破产「那就是资本主义」",
+          "src": { "label": "247wallst", "url": "https://247wallst.com/investing/2026/05/09/blackrocks-larry-fink-says-ai-is-creating-a-new-trillion-dollar-asset-class-and-trumps-policies-may-accelerate-it/" } },
+        { "who": "Michael Intrator(CoreWeave CEO · ⚠️利益相关方)", "dir": "反驳折旧论", "up": 1,
+          "q": "反驳Burry:A100等旧款GPU持续满租,H100转租价仍达原价95%,客户愿租6-7年——直接对冲「GPU 2-3年报废」假设;将「循环融资」重定义为正常供应链锁定行为(⚠️经Burry 7/8 Substack帖引述)",
+          "src": { "label": "via Burry Substack 7/8引述", "url": "https://michaeljburry.substack.com/p/short-thoughts-july-8-2026-nvda-neos" } }
+      ] }
+    },
+    {
+      "type": "opinions", "icon": "⚖️", "title": "中间派 / 内部矛盾声音(3)", "asof": "2026-07-19",
+      "sources": [{ "label": "不纯属任一阵营 · 影响判断单独记录", "url": "" }],
+      "data": { "items": [
+        { "who": "Sam Altman(OpenAI CEO)", "dir": "复杂",
+          "q": "承认「投资者对AI确实过度兴奋」(My opinion is yes);同时坚持AI是「很长时间以来最重要的事情」,OpenAI仍计划「未来投入数万亿美元建数据中心」",
+          "src": { "label": "Yahoo Finance", "url": "https://finance.yahoo.com/news/sam-altman-warns-ai-bubble-163209545.html" } },
+        { "who": "Bret Taylor(OpenAI董事会主席)", "dir": "复杂",
+          "q": "达沃斯对CNBC:AI「大概率」是泡沫(probably),预计未来几年会有修正;但强调「市场机制会自然筛选出真正有价值的公司」",
+          "src": { "label": "CNBC", "url": "https://www.cnbc.com/2026/01/22/openai-chair-bret-taylor-ai-bubble-correction.html" } },
+        { "who": "Satya Nadella(微软CEO)", "dir": "自设判据",
+          "q": "「泡沫的标志之一,就是如果我们谈论的永远只是科技公司自己」——暗示AI需扩散到更广泛行业才能证伪泡沫论(非典型多头)",
+          "src": { "label": "Tom's Hardware", "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/microsoft-ceo-says-ai-needs-to-have-a-wider-impact-or-else-it-risks-quickly-losing-social-permission-also-says-that-the-technology-should-benefit-more-people-to-avoid-a-bubble" } }
+      ] }
+    },
+    {
+      "type": "rawtable", "icon": "🔥", "title": "争议焦点(空头说 vs 多头说 vs 未解)", "asof": "2026-07-19",
+      "sources": [{ "label": "调研原文 §3(relation/N426/001)", "url": "" }],
+      "data": {
+        "cols": ["焦点", "空头", "多头", "未解之处"],
+        "rows": [
+          ["一 · GPU折旧年限按几年算(决定财报「真实盈利」水分)", "Burry:微软4→6年·Meta 5.5年,实际经济寿命远短于账面;2026-28累计少计约$1760亿折旧,当前盈利被人为做高", "Intrator:A100仍满租·H100转租价达原价95%·客户愿签6-7年合约——实际寿命并不短", "双方引用的都是「部分证据」(Huang的表态多空可各取所需);没有第三方独立会计审计能一锤定音"],
+          ["二 · 2026 CapEx「见顶放缓」还是「仍在加速」(直接关系信号①有效性)", "押「即将到来的放缓」:UBS预测·部分基金经理已提前减仓芯片股转买云厂商;Meta自曝闲置算力=扩张超前于真实需求", "Ives/Fink:「才3局1出局」,资本开支仍将持续多年", "2026实际数据+76%仍加速创纪录;「放缓」指向2027(+25%)/2028(+6%)预期尚未兑现 → 信号①应标「预期中/尚未触发」"],
+          ["三 · 估值到底贵不贵(dot-com类比是否成立)", "盈利增速预期20.2%超2000峰值18.6%;82%经理称做多半导体最拥挤(纪录);CoreWeave/Nebius等二三线估值脱离基本面", "Nvidia远期P/E约22-27倍 vs Cisco泡沫顶峰210倍;NVDA占标普市值权重约8%但贡献盈利约7%,权重与盈利基本匹配", "双方谈的是不同层次:多头聚焦龙头(相对合理)·空头聚焦二三线/循环交易账面盈利——二者不矛盾,说明AI股内部分化加剧而非铁板一块"]
+        ]
+      }
+    },
+    {
+      "type": "timeline", "icon": "🗓", "title": "将至的关键 Catalyst(多空都在盯)", "asof": "2026-07-19",
+      "sources": [
+        { "label": "IG UK(Big Tech Q2 earnings)", "url": "https://www.ig.com/uk/trading-strategies/big-tech-q2-2026-earnings---the-ai-capex-question-and-what-uk-in-260716" },
+        { "label": "StockTitan(Meta Q2排期)", "url": "https://www.stocktitan.net/news/META/meta-to-announce-second-quarter-2026-sdasry9e3xzw.html" }
+      ],
+      "note": "另两条无固定日期:①AI公司债市场吸纳能力——H1六大AI巨头合计发债约$2440亿,高盛交易员警告吸纳空间快速逼近临界点,H2发债规模及利差是信用市场是否开始「打折」AI叙事的关键;②中国/自研替代进度——华为在华份额近50%,后续出口管制及Nvidia对华合规芯片进展持续影响信号⑤",
+      "data": { "events": [
+        { "date": "2026-07-22", "label": "Alphabet Q2财报", "sub": "云厂商CapEx指引 · 验证信号①(放缓 vs 加速)第一手数据" },
+        { "date": "2026-07-29", "label": "微软 + Meta Q2财报", "sub": "Meta年CapEx $1150-1350亿指引变动 · Meta Compute转售后首份财报" },
+        { "date": "2026-07-30", "label": "Apple + Amazon Q2财报", "sub": "四大云厂商CapEx指引一周内密集落地" },
+        { "date": "2026-08-26", "label": "Nvidia Q2 FY2027财报", "sub": "数据中心营收环比(Q1 $752亿)· 指引是否达街边$830-850亿 · 云厂商需求真实性的「金丝雀」" }
+      ] }
+    },
+    {
+      "type": "searchrow", "icon": "🔍", "title": "搜索入口", "asof": "2026-07-19",
+      "data": { "chips": [
+        { "label": "Burry Substack", "url": "https://michaeljburry.substack.com" },
+        { "label": "Gary Marcus 𝕏", "url": "https://x.com/GaryMarcus" },
+        { "label": "Owenomics(Acadian)", "url": "https://www.acadian-asset.com/investment-insights/owenomics" },
+        { "label": "𝕏 搜 AI bubble", "url": "https://x.com/search?q=AI%20bubble&f=live" },
+        { "label": "𝕏 搜 Chanos AI", "url": "https://x.com/search?q=Jim%20Chanos%20AI&f=live" },
+        { "label": "BofA FMS 最新", "url": "https://www.google.com/search?q=BofA+Global+Fund+Manager+Survey+AI+bubble&tbm=nws" },
+        { "label": "Google News · AI capex", "url": "https://news.google.com/search?q=AI%20capex%20hyperscaler" }
+      ] }
+    }
+  ]
+}

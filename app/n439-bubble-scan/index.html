@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>标的泡沫检测 · 四维筛选</title>
+<!-- 壳共用:app.css 拿基础 token(bg/字体/头/embed padding)· 本 app 渲染自包含:
+     筛选器交互超出 _tpl 六模块(filtertable 尚无此 module type),先自包含,
+     后续可壳化为第 7 模块回馈 _tpl · TECH · 2026-07-19 -->
+<link rel="stylesheet" href="../_tpl/app.css?v=1">
+<style>
+/* bs- 前缀 = bubble-scan 私有 · 配色对齐 app.css(#1c1b18 面板 #2e2d28 边 #8a8478 次要 #c4a882 强调) */
+.bs-fg{display:flex;flex-wrap:wrap;align-items:center;margin:3px 0}
+.bs-fl{width:44px;flex:none;color:#5a564c;font-size:10.5px}
+.bs-chip{font-size:11px;color:#8a8478;border:1px solid #2e2d28;background:#161613;border-radius:9px;
+  padding:1px 8px;margin:2px 3px;cursor:pointer;white-space:nowrap;user-select:none}
+.bs-chip:hover{color:#d4d1ca;border-color:#3a3934}
+.bs-chip.on{color:#0c0c0e;background:#c4a882;border-color:#c4a882;font-weight:600}
+.bs-cnt{font-size:10.5px;color:#5a564c;margin:6px 2px 4px}
+.bs-list{border:1px solid #2e2d28;border-radius:9px;background:#161613;overflow:hidden}
+.bs-row{padding:6px 10px 7px;border-bottom:1px solid #22211d}
+.bs-row:last-child{border-bottom:none}
+.bs-r1{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.bs-r1 b{color:#e8e5de;font-size:12.5px}
+.bs-tk{font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#5a564c}
+.bs-cc{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+.bs-tag{font-size:9.5px;color:#9a9488;border:1px solid #2e2d28;border-radius:5px;padding:0 5px;white-space:nowrap}
+.bs-r2{font-size:10.5px;color:#8a8478;margin-top:2px;line-height:1.5}
+.bs-r2 .hot{color:#e0b450}
+.bs-r2 .cold{color:#5ab07a}
+.bs-note{font-size:10px;color:#5a564c;line-height:1.6;margin-top:12px;border-top:1px solid #22211d;padding-top:8px}
+.bs-note a{color:#8a8478}
+</style>
+</head>
+<body>
+<div id="app-root" class="appc"><div class="app-loading">载入中…</div></div>
+<script>
+(function(){
+'use strict';
+const q = new URLSearchParams(location.search);
+const CTX = { node: q.get('node')||'', nid: q.get('nid')||'', embed: q.get('embed')==='1' };
+if(CTX.embed) document.body.classList.add('embed');
+const _esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* 筛选匹配:估值「贵」用前缀(避免吃进「极贵/偏贵」)· 周期「⚠顶」按含顶 · 其余 includes */
+function hit(group, opt, row){
+  const [,,tier,concepts,d,v,c] = row;
+  if(group==='概念轴') return concepts.some(x=>x.startsWith(opt));
+  if(group==='泡沫档') return tier===opt;
+  if(group==='兑现')  return d.includes(opt);
+  if(group==='估值')  return opt==='贵' ? v.startsWith('贵') : v.includes(opt);
+  if(group==='周期')  return opt==='⚠顶' ? c.includes('顶') : c.startsWith(opt);
+  return true;
+}
+
+fetch('./data.json?'+Date.now()).then(r=>{ if(!r.ok) throw 0; return r.json(); }).then(D=>{
+  const sel = {}; Object.keys(D.filters).forEach(k=>sel[k]=null);
+  const root = document.getElementById('app-root');
+
+  const head = CTX.embed ? '' :
+    `<div class="app-head"><span class="app-kind">${_esc(D.meta.kind)}</span>
+      <span class="app-title">${_esc(D.meta.icon)} ${_esc(D.meta.title)}</span></div>
+     <div class="app-sub"><span>asof ${_esc(D.meta.asof)}</span>
+      ${CTX.nid?`<span class="app-node-chip">N${_esc(CTX.nid)}</span>`:''}</div>`;
+
+  root.innerHTML = head +
+    `<div class="app-sec"><div id="bs-filters"></div><div class="bs-cnt" id="bs-cnt"></div>
+     <div class="bs-list" id="bs-list"></div>
+     <div class="bs-note">${_esc(D.meta.note)} ·
+       ${(D.meta.sources||[]).map(s=>`<a href="${_esc(s.url)}" target="_blank">${_esc(s.label)}</a>`).join(' · ')}</div></div>`;
+
+  const fEl = document.getElementById('bs-filters');
+  function renderFilters(){
+    fEl.innerHTML='';
+    for(const g in D.filters){
+      const row=document.createElement('div'); row.className='bs-fg';
+      const lab=document.createElement('span'); lab.className='bs-fl'; lab.textContent=g; row.appendChild(lab);
+      [null].concat(D.filters[g]).forEach(o=>{
+        const c=document.createElement('span');
+        c.className='bs-chip'+(sel[g]===o?' on':''); c.textContent=o===null?'全部':o;
+        c.onclick=()=>{ sel[g]=(sel[g]===o?null:o); renderFilters(); renderList(); };
+        row.appendChild(c);
+      });
+      fEl.appendChild(row);
+    }
+  }
+  function renderList(){
+    const rows = D.rows.filter(r=>Object.keys(D.filters).every(g=>sel[g]===null||hit(g,sel[g],r)));
+    document.getElementById('bs-cnt').textContent=`显示 ${rows.length} / ${D.rows.length}`;
+    document.getElementById('bs-list').innerHTML = rows.map(r=>{
+      const [name,tk,tier,concepts,d,v,c,nid]=r;
+      const vCls=/极贵|假便宜|无锚/.test(v)?'hot':(/划算/.test(v)?'cold':'');
+      const cCls=/顶/.test(c)?'hot':'';
+      return `<div class="bs-row"><div class="bs-r1">${tier} <b>${_esc(name)}</b><span class="bs-tk">${_esc(tk)}${nid?` · N${_esc(nid)}`:''}</span>
+        <span class="bs-cc">${concepts.map(x=>`<span class="bs-tag">${_esc(x)}</span>`).join('')}</span></div>
+        <div class="bs-r2">兑现=${_esc(d)} · 估值=<span class="${vCls}">${_esc(v)}</span> · 周期=<span class="${cCls}">${_esc(c)}</span></div></div>`;
+    }).join('') || '<div class="bs-row" style="color:#5a564c">没有命中 —— 换个筛选组合</div>';
+  }
+  renderFilters(); renderList();
+}).catch(()=>{
+  document.getElementById('app-root').innerHTML='<div class="app-err">data.json 载入失败 —— 检查 site/apps/n439-bubble-scan/data.json 是否存在/合法</div>';
+});
+})();
+</script>
+</body>
+</html>

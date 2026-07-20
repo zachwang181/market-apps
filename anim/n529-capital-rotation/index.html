@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>资金退潮 · 五个市场的港湾</title>
+<style>
+/* ===== N529 资金退潮 · 五市场资金去向故事 · 动画叙事 explainer =====
+   自包含:无外部库 · 深色系对齐 relation-explorer
+   契约:?node=&nid=&embed=1(embed 藏大头) */
+:root{
+  --bg:#0c0c0e; --panel:#17161a; --panel2:#1c1b18; --line:#2a2822;
+  --tx:#e8e5de; --mut:#8a877e; --gold:#c4a882; --grn:#5ab07a; --red:#e07a7a;
+  --sky:#111018; --blu:#7a9fd4;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--bg);color:var(--tx);font:14px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+body{display:flex;flex-direction:column;min-height:100vh}
+
+/* ---- 头 ---- */
+.hd{display:flex;align-items:center;gap:8px;padding:12px 16px 8px;flex-wrap:wrap}
+.hd h1{font-size:16px;font-weight:700;letter-spacing:.5px}
+.hd .chip{font-size:11px;color:var(--gold);border:1px solid var(--line);border-radius:20px;padding:1px 9px;background:var(--panel)}
+body.embed .hd{display:none}
+
+/* ---- 舞台 ---- */
+main{flex:1;padding:8px 12px 4px;max-width:860px;width:100%;margin:0 auto}
+.scene{display:none}
+.scene.on{display:block;animation:sceneIn .35s ease}
+@keyframes sceneIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.stagebox{background:linear-gradient(180deg,var(--sky),var(--panel) 85%);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.stagebox svg{display:block;width:100%;height:auto}
+
+/* ---- 旁白 ---- */
+.nr{padding:12px 4px 4px}
+.nr h2{font-size:15px;color:var(--gold);margin-bottom:6px}
+.nr h2 .no{font-size:11px;color:var(--mut);font-weight:400;margin-right:8px;letter-spacing:1px}
+.nr p{color:var(--tx);font-size:13.5px;margin-bottom:8px}
+.nr p b{color:var(--gold);font-weight:600}
+.nr p b.g{color:var(--grn)}
+.nr p b.r{color:var(--red)}
+.nr p b.b{color:var(--blu)}
+.facts{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.fx{font-size:11px;line-height:1.5;padding:2px 9px;border-radius:14px;border:1px solid var(--line);background:var(--panel)}
+.fx.v{color:var(--grn)}
+.fx.v::before{content:"✓ ";font-weight:700}
+.fx.q{color:var(--mut)}
+.fx.q::before{content:"◻ ";opacity:.7}
+
+/* ---- 来源 ---- */
+.src{margin:10px 4px 6px;font-size:11px;color:var(--mut)}
+.src summary{cursor:pointer;color:var(--mut)}
+.src ul{margin:6px 0 0 18px}
+.src a{color:var(--blu);text-decoration:none}
+.legend{font-size:11px;color:var(--mut);padding:2px 4px}
+
+/* ---- 控制条 ---- */
+.ctrl{position:sticky;bottom:0;background:linear-gradient(180deg,transparent,var(--bg) 30%);padding:8px 12px 12px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.ctrl button{background:var(--panel);color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer}
+.ctrl button:hover{border-color:var(--gold);color:var(--gold)}
+.ctrl button:disabled{opacity:.35;cursor:default}
+.ctrl button:disabled:hover{border-color:var(--line);color:var(--tx)}
+.dots{display:flex;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--line);cursor:pointer;border:none;padding:0}
+.dot.on{background:var(--gold)}
+.cnt{font-size:11px;color:var(--mut);min-width:120px;text-align:center}
+#vbtn.on{border-color:var(--gold);color:var(--gold);background:var(--panel2)}
+.ctrl select.vsel{background:var(--panel);color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:12px;max-width:150px;cursor:pointer}
+.ctrl select.vsel:hover{border-color:var(--gold)}
+.vstat{font-size:10.5px;color:var(--mut);max-width:170px;line-height:1.3}
+
+/* ===== 动画通用 ===== */
+body.paused svg *{animation-play-state:paused !important}
+svg [class]{transform-box:fill-box}
+.fu{opacity:0;animation:fu .55s ease forwards}
+@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.pop{opacity:0;transform-origin:center;animation:pop .6s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes pop{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:none}}
+.flow{stroke-dasharray:7 9;animation:flow .8s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-32}}
+.flowr{stroke-dasharray:7 9;animation:flowr .8s linear infinite}
+@keyframes flowr{to{stroke-dashoffset:32}}
+.blink{animation:blink 2.4s steps(1) infinite}
+@keyframes blink{0%,88%{opacity:1}90%,96%{opacity:.15}98%{opacity:1}}
+.pulse{transform-origin:center;animation:pulse 2.2s ease-in-out infinite alternate}
+@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.13)}}
+.draw{stroke-dasharray:300;stroke-dashoffset:300;animation:draw 1.6s ease .3s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.bar{transform-origin:left center;animation:bar 1.4s ease .4s forwards;transform:scaleX(0)}
+@keyframes bar{to{transform:scaleX(1)}}
+
+/* ===== 幕1 开场 · 高弹性科技退潮 → 五港湾 ===== */
+.opwave{animation:opwave 5s ease-in-out infinite alternate}
+@keyframes opwave{from{transform:translateX(0)}to{transform:translateX(-46px)}}
+.oprock{transform-origin:center;animation:oprock 1.5s ease-in-out infinite}
+@keyframes oprock{0%,100%{transform:translate(0,0) rotate(-4deg)}50%{transform:translate(0,-5px) rotate(5deg)}}
+.opcoin{animation:opcoin 3s linear infinite}
+@keyframes opcoin{0%{opacity:0;transform:translate(0,0)}12%{opacity:1}88%{opacity:1}100%{opacity:0;transform:translate(var(--dx,300px),var(--dy,0))}}
+.ophar{opacity:0;animation:pop .6s cubic-bezier(.2,1.4,.4,1) forwards}
+.opbeam{transform-origin:center;animation:pulse 2.6s ease-in-out infinite alternate}
+
+/* ===== 幕2 美股·最深的池子 · 四层瀑布 ===== */
+.uslayer{opacity:0;animation:fu .55s ease forwards}
+.uscoin{animation:uscoin 3s ease-in infinite}
+@keyframes uscoin{0%{opacity:0;transform:translateY(0)}8%{opacity:1}70%{opacity:1;transform:translateY(190px)}100%{opacity:0;transform:translateY(210px)}}
+.usblink{animation:blink 2.6s steps(1) infinite}
+
+/* ===== 幕3 台湾·美科技卫星 · 轨道 ===== */
+.twsun{transform-origin:center;animation:pulse 3s ease-in-out infinite alternate}
+.tworbit{transform-box:view-box !important;transform-origin:205px 165px;animation:tworbit 9s linear infinite}
+@keyframes tworbit{to{transform:rotate(360deg)}}
+.twsat{transform-origin:center;animation:twsat 9s linear infinite reverse}
+@keyframes twsat{to{transform:rotate(360deg)}}
+.twpulse{transform-box:view-box !important;transform-origin:120px 190px;animation:twpulse 3.4s ease-out infinite;opacity:0}
+@keyframes twpulse{0%{opacity:.55;transform:scale(.25)}70%{opacity:0;transform:scale(1)}100%{opacity:0}}
+.twwave{stroke-dasharray:5 6;animation:flow 1s linear infinite}
+.twbox{opacity:0;animation:fu .5s ease forwards}
+
+/* ===== 幕4 韩国·记忆体周期 ===== */
+.krcyc{transform-origin:center;animation:krcyc 6s linear infinite}
+@keyframes krcyc{to{transform:rotate(360deg)}}
+.krwave{stroke-dasharray:280;stroke-dashoffset:280;animation:draw 2s ease .2s forwards}
+.krhbm{opacity:0;transform-origin:center bottom;animation:krhbm .5s ease forwards}
+@keyframes krhbm{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.krlever{transform-origin:582px 300px;animation:krlever 2.2s ease 1s forwards;transform:rotate(14deg)}
+@keyframes krlever{to{transform:rotate(0)}}
+.krlift{transform-origin:center bottom;animation:krlift 1.8s ease 1.2s forwards;transform:scaleY(.2)}
+@keyframes krlift{to{transform:scaleY(1)}}
+.krbox{opacity:0;animation:fu .5s ease forwards}
+.krtag{transform-origin:center;animation:pulse 2s ease-in-out infinite alternate}
+
+/* ===== 幕5 中国·红利港湾 ===== */
+.cncoin{animation:cncoin 2.6s linear infinite}
+@keyframes cncoin{0%{opacity:0}12%{opacity:1}88%{opacity:1}100%{opacity:0;transform:translateX(var(--dx,200px)) translateY(var(--dy,0))}}
+.cnbox{opacity:0;animation:fu .55s ease forwards}
+.cnpile{transform-origin:center bottom;animation:cnpile 1.8s ease .6s forwards;transform:scaleY(.14)}
+@keyframes cnpile{to{transform:scaleY(1)}}
+
+/* ===== 幕6 港股·科技红利出口 ===== */
+.hkpipe{stroke-dasharray:8 8;animation:flow .9s linear infinite}
+.hkcoin{animation:hkcoin 2.8s linear infinite}
+@keyframes hkcoin{0%{opacity:0;transform:translateX(0)}12%{opacity:1}88%{opacity:1}100%{opacity:0;transform:translateX(196px)}}
+.hkbox{opacity:0;animation:fu .5s ease forwards}
+.hkbb{transform-origin:center;animation:hkbb 2.4s ease-in-out infinite alternate}
+@keyframes hkbb{from{transform:scale(1)}to{transform:scale(1.1)}}
+.hkgauge{transform-origin:left center;animation:bar 1.6s ease .5s forwards;transform:scaleX(0)}
+
+/* ===== 幕7 收尾·全球图景 ===== */
+.fnhar{opacity:0;animation:pop .6s cubic-bezier(.2,1.4,.4,1) forwards}
+.fnwater{stroke-dasharray:6 8;animation:flow 1s linear infinite}
+.fndrop{animation:fndrop 2.6s ease-in infinite}
+@keyframes fndrop{0%{opacity:0;transform:translate(0,0)}12%{opacity:1}100%{opacity:0;transform:translate(150px,120px)}}
+.fnbar{transform-origin:left center;animation:bar 1.8s ease .4s forwards;transform:scaleX(0)}
+</style>
+<script>window.__NARR_AUDIO={"zh-CN-XiaoxiaoNeural||先记住一件事:每一轮行情里,高弹性科技——中小半导体、AI 初创——涨得最猛,退潮时也跌得最凶,资金总是先从这里撤。但撤出来的钱不会凭空消失,它只会换个地方待着,去找回报和确定性更高的港湾。有意思的是,每个市场的结构不同,港湾长得也不一样。接下来是一趟横跨美股、台湾、韩国、中国大陆、港股五个市场的资金去向之旅——看同一股退潮的力量,在五种不同的市场骨架里,分别流向了哪里。主线只有一句:结构决定资金去哪,钱像水一样,往确定性的低处流。": "audio/x_0.mp3", "zh-CN-XiaoxiaoNeural||先看美股——全球最深的资金池。退潮的钱不用出海,在自己市场里就能一层层往下找港湾。第一层,先抛高 beta 的半导体和 AI 初创,它们跌得最凶;第二层,就近搬进科技现金牛苹果、微软——苹果一半利润来自高毛利的服务订阅,每年上千亿回购托底,beta 明显低于费半,是科技板块里的避风港;第三层,整个换到防御板块,必需消费、医药、公用事业,再加迪士尼和精品,经济好坏人都要吃喝用电,盈利稳、beta 低;第四层,真恐慌的时候,一部分钱直接离场,涌向现金、美债、黄金、美元。四层港湾一字排开,这是资金池够深带来的奢侈。": "audio/x_1.mp3", "zh-CN-XiaoxiaoNeural||再看台湾,它像一颗绕着美科技转的卫星。台积电是整个加权指数的锚,一家就占指数四成以上,而它又是全球 AI 芯片的代工核心,占了全球晶圆代工约七成。加上指数大约四分之三是电子、出口导向,台股几乎和费城半导体指数、纳指同频呼吸——美科技一打喷嚏,台湾就跟着抖。举个例子,2026 年 6 月,费半指数隔夜跌了近百分之八,第二天台股就跟着跌两个多百分点、台积电跌了百分之四。真到避险的时候,岛内的钱会往金融股、高股息 ETF、传产躲,像 0056、00878 这些高股息 ETF 是台湾散户的最爱,持有人多达上百万。但这是在卫星内部换座位:结构上,台湾离不开美科技的景气,整个市场的天气,仍由太平洋对岸那颗太阳决定。": "audio/x_2.mp3", "zh-CN-XiaoxiaoNeural||韩国的骨架更极端。三星电子加上 SK 海力士两家,就撑起了 KOSPI 的近一半。所以韩国大盘本质上是一张内存周期加 HBM 的杠杆下注——SK 海力士是供给英伟达的 HBM 全球第一,大约百分之五十七到六十二,内存景气一转,大盘跟着走。韩股还有个老问题叫 Korea discount,长期折价,市净率常年在净值附近甚至更低,ROE 偏低,根子在财阀治理和低股东回报。2024 年政府推出企业 Value-up 方案,用指数、ETF、税收优惠逼公司多分红、多回购、改善治理,给这个折价市场加了一根撬杆。钱的去向就顺着这根撬杆,轮进金融、汽车这些低估值、高分红的改革受益篮子。": "audio/x_3.mp3", "zh-CN-XiaoxiaoNeural||轮到中国大陆。它的结构缺了关键一块:Apple 式那种强现金流加科技成长的二合一龙头很稀缺——腾讯、阿里现金流强也大手笔回购,但挂在港股;茅台是现金牛,却属于白酒消费、不是科技。所以 A 股很难像美股那样在科技内部低风险调仓。于是内地资金退潮时的港湾很清楚:高股息红利股,银行、煤炭、电力、运营商;黄金,2024 年金条金币投资需求涨了大约两成;国债和银行理财,2024 年一轮大债牛,十年期收益率跌破百分之二、创了历史新低;还有干脆存起来,居民超额储蓄堆得很高。结果就是,2024 年起红利风格明显跑赢成长——市场用脚投票,补上了自己缺的那个港湾。": "audio/x_4.mp3", "zh-CN-XiaoxiaoNeural||最后是港股,它在这盘棋里位置很特殊,是大陆资金的一个出海口。腾讯、阿里、美团这些中国的科技现金牛,都挂在香港、A 股买不到,内地资金想配,唯一的在岸通道就是南向港股通,2024 年净流入大约八千一百亿港币,创了纪录。而香港偏偏两种港湾都有:一边是科技现金牛,腾讯 2024 年回购大约一千一百二十亿港币,稳坐港股回购王,阿里回购大约一百一十九亿美元;一边是高股息央企,中海油、四大行的 H 股,股息率大约六到七个百分点。更妙的是 AH 溢价,同一家公司,H 股比 A 股便宜,现金流分红一样、股价更低,股息率就更高。大陆买不到的科技现金牛,在这儿买得到;想要的高股息,这儿也管够,一站配齐。": "audio/x_5.mp3", "zh-CN-XiaoxiaoNeural||把五个市场并排看,故事就完整了。同样是高弹性科技退潮,钱去哪,取决于每个市场的骨架。美股池子最深,四层港湾一路往下,不用出海;台湾、韩国是卫星,一个绑着美科技景气,一个绑着内存周期,避险只能在单一周期内换座位;中国大陆缺科技现金牛,就用红利、黄金、国债、存款补上港湾;港股则是大陆资金的混合出口,科技现金牛加高股息一站配齐。从美到港,港湾越来越依赖外部景气加分红红利这条确定性线。一句话收束这趟旅程:结构决定资金去向,钱像水一样,往确定性的低处流。": "audio/x_6.mp3"};</script>
+</head>
+<body>
+
+<header class="hd">
+  <h1>💸 高弹性科技退潮 · 资金去找"港湾"</h1>
+  <span class="chip" id="nodechip">N529 · 资金流出故事</span>
+</header>
+
+<main id="stage">
+
+<!-- ================= 幕1 开场母题 ================= -->
+<section class="scene" id="sc0">
+  <div class="stagebox">
+  <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="幕1 高弹性科技退潮 资金流向五个市场的港湾">
+    <text x="400" y="32" text-anchor="middle" font-size="14" fill="#c4a882" font-weight="700">高弹性科技退潮 · 钱不会消失 · 它去找"确定性的港湾"</text>
+    <!-- 左:退潮的高弹性科技海岸 -->
+    <g class="fu" style="animation-delay:.1s">
+      <text x="120" y="86" text-anchor="middle" font-size="12" fill="#e07a7a" font-weight="600">高弹性科技(高 beta)</text>
+      <g class="oprock"><path d="M104 150 l16 -40 16 40 -7 5 -9 -6 -9 6 Z" fill="#e07a7a"/><path d="M113 155 l7 12 7 -12 Z" fill="#c4a882"/></g>
+      <path d="M40 240 l30 -18 26 24 30 -34 26 30 30 -22 24 16" stroke="#e07a7a" stroke-width="2" fill="none" class="draw"/>
+      <text x="120" y="262" text-anchor="middle" font-size="10.5" fill="#8a877e">退潮时跌最凶 · 资金先撤</text>
+    </g>
+    <!-- 退潮的水 + 流出的钱 -->
+    <g class="opwave" opacity=".5"><path d="M20 300 q40 -14 80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0" stroke="#7a9fd4" stroke-width="2" fill="none"/></g>
+    <g class="opwave" opacity=".3" style="animation-delay:.6s"><path d="M20 318 q40 -12 80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0" stroke="#7a9fd4" stroke-width="2" fill="none"/></g>
+    <path id="oppath" d="M180 200 Q360 210 520 150" stroke="#c4a882" stroke-width="1.4" fill="none" stroke-dasharray="4 6" opacity=".4" class="flow"/>
+    <g class="opcoin" style="--dx:360px;--dy:-44px"><circle cx="168" cy="200" r="9" fill="#c4a882"/><text x="168" y="204" text-anchor="middle" font-size="9" fill="#0c0c0e" font-weight="700">$</text></g>
+    <g class="opcoin" style="--dx:360px;--dy:8px;animation-delay:1s"><circle cx="168" cy="210" r="8" fill="#c4a882"/><text x="168" y="214" text-anchor="middle" font-size="8" fill="#0c0c0e" font-weight="700">$</text></g>
+    <g class="opcoin" style="--dx:360px;--dy:64px;animation-delay:2s"><circle cx="168" cy="206" r="8" fill="#c4a882"/><text x="168" y="210" text-anchor="middle" font-size="8" fill="#0c0c0e" font-weight="700">$</text></g>
+    <!-- 右:五个港湾 -->
+    <g font-size="12" font-weight="600">
+      <g class="ophar" style="animation-delay:.6s"><path d="M548 96 q40 -10 84 0 l0 20 -84 0 Z" fill="#14201a" stroke="#5ab07a"/><circle cx="562" cy="90" r="5" fill="#c4a882" class="opbeam"/><text x="648" y="112" fill="#e8e5de">美股 · 最深的池子</text></g>
+      <g class="ophar" style="animation-delay:.9s"><path d="M548 148 q40 -10 84 0 l0 20 -84 0 Z" fill="#14201a" stroke="#5ab07a"/><circle cx="562" cy="142" r="5" fill="#c4a882" class="opbeam" style="animation-delay:.4s"/><text x="648" y="164" fill="#e8e5de">台湾 · 美科技卫星</text></g>
+      <g class="ophar" style="animation-delay:1.2s"><path d="M548 200 q40 -10 84 0 l0 20 -84 0 Z" fill="#14201a" stroke="#5ab07a"/><circle cx="562" cy="194" r="5" fill="#c4a882" class="opbeam" style="animation-delay:.8s"/><text x="648" y="216" fill="#e8e5de">韩国 · 记忆体周期</text></g>
+      <g class="ophar" style="animation-delay:1.5s"><path d="M548 252 q40 -10 84 0 l0 20 -84 0 Z" fill="#14201a" stroke="#5ab07a"/><circle cx="562" cy="246" r="5" fill="#c4a882" class="opbeam" style="animation-delay:1.2s"/><text x="648" y="268" fill="#e8e5de">中国 · 红利港湾</text></g>
+      <g class="ophar" style="animation-delay:1.8s"><path d="M548 304 q40 -10 84 0 l0 20 -84 0 Z" fill="#14201a" stroke="#5ab07a"/><circle cx="562" cy="298" r="5" fill="#c4a882" class="opbeam" style="animation-delay:1.6s"/><text x="648" y="320" fill="#e8e5de">港股 · 科技+红利出口</text></g>
+    </g>
+    <g class="fu" style="animation-delay:2.1s"><text x="400" y="372" text-anchor="middle" font-size="11.5" fill="#8a877e">五个市场 · 结构不同 → 港湾长得也不同 · 这是一趟资金去向之旅</text></g>
+  </svg>
+  </div>
+  <div class="nr">
+    <h2><span class="no">幕 1</span>母题:退潮时,钱去找"确定性的港湾"</h2>
+    <p>每一轮行情里,<b class="r">高弹性科技</b>——中小半导体、AI 初创——涨得最猛,退潮时也跌得最凶,资金总是先从这里撤。但撤出来的钱<b>不会凭空消失</b>,它只会换个地方待着,去找回报和确定性更高的"<b class="g">港湾</b>"。有意思的是:<b>每个市场的结构不同,港湾长得也不一样</b>。接下来是一趟横跨<b>美股、台湾、韩国、中国大陆、港股</b>五个市场的资金去向之旅——看同一股退潮的力量,在五种不同的市场骨架里,分别流向了哪里。主线只有一句:<b class="b">结构决定资金去哪,钱像水一样,往确定性低处流。</b></p>
+    <div class="facts">
+      <span class="fx q">本 App = 市场机制科普(对应团队 N426 泡沫全景 / N513 算力动画)· 非买卖建议</span>
+      <span class="fx q">"钱不消失只换地方" = 资金去向直觉(定性)</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 幕2 美股·最深的池子 ================= -->
+<section class="scene" id="sc1">
+  <div class="stagebox">
+  <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="幕2 美股最深的池子 四层港湾 高beta到科技现金牛到防御板块到真离场">
+    <text x="400" y="30" text-anchor="middle" font-size="14" fill="#c4a882" font-weight="700">美股 · 最深的池子:退潮分四层往下走</text>
+    <!-- 四层瀑布台阶 -->
+    <g font-size="11.5">
+      <!-- 层1 高beta -->
+      <g class="uslayer" style="animation-delay:.1s">
+        <rect x="40" y="52" width="470" height="52" rx="9" fill="#201414" stroke="#e07a7a"/>
+        <text x="58" y="74" fill="#e07a7a" font-weight="700">① 高 beta 半导体 / AI 初创</text>
+        <text x="58" y="92" fill="#8a877e" font-size="10.5">盈利全靠景气 · 跌最凶 · 资金先跑</text>
+      </g>
+      <!-- 层2 科技现金牛 -->
+      <g class="uslayer" style="animation-delay:.5s">
+        <rect x="70" y="118" width="470" height="56" rx="9" fill="#1c1b18" stroke="#c4a882"/>
+        <text x="88" y="140" fill="#c4a882" font-weight="700">② 科技现金牛:苹果 🍎 · 微软</text>
+        <text x="88" y="159" fill="#e8e5de" font-size="10.5">服务订阅 + 巨额回购托底 · beta 更低 = 板块内避风港</text>
+      </g>
+      <!-- 层3 防御板块 -->
+      <g class="uslayer" style="animation-delay:.9s">
+        <rect x="100" y="188" width="470" height="56" rx="9" fill="#14201a" stroke="#5ab07a"/>
+        <text x="118" y="210" fill="#5ab07a" font-weight="700">③ 防御板块:必需消费 KO 🥤 · 医药 💊 · 公用 🔌</text>
+        <text x="118" y="229" fill="#e8e5de" font-size="10.5">＋ 迪士尼 / 精品 · 经济好坏都要吃喝用电 → 盈利稳、beta 低</text>
+      </g>
+      <!-- 层4 真离场 -->
+      <g class="uslayer" style="animation-delay:1.3s">
+        <rect x="130" y="258" width="470" height="56" rx="9" fill="#111820" stroke="#7a9fd4"/>
+        <text x="148" y="280" fill="#7a9fd4" font-weight="700">④ 真离场:现金 💵 · 美债 🏦 · 黄金 🥇 · 美元 💲</text>
+        <text x="148" y="299" fill="#e8e5de" font-size="10.5">恐慌够大时,一部分钱直接撤出股市 · flight to quality</text>
+      </g>
+    </g>
+    <!-- 瀑布下落的钱 -->
+    <g class="uscoin" style="animation-delay:.3s"><circle cx="300" cy="108" r="7" fill="#c4a882"/><text x="300" y="112" text-anchor="middle" font-size="7" fill="#0c0c0e" font-weight="700">$</text></g>
+    <g class="uscoin" style="animation-delay:1.1s"><circle cx="330" cy="108" r="7" fill="#c4a882"/><text x="330" y="112" text-anchor="middle" font-size="7" fill="#0c0c0e" font-weight="700">$</text></g>
+    <g class="uscoin" style="animation-delay:1.9s"><circle cx="360" cy="108" r="7" fill="#c4a882"/><text x="360" y="112" text-anchor="middle" font-size="7" fill="#0c0c0e" font-weight="700">$</text></g>
+    <!-- 右:beta 温度计 -->
+    <g font-size="10">
+      <text x="620" y="70" fill="#8a877e">β 越高 = 波动越大</text>
+      <text x="620" y="98" fill="#e07a7a">NVDA 2.21</text><rect x="620" y="102" width="150" height="8" rx="4" fill="#e07a7a" class="bar"/>
+      <text x="620" y="126" fill="#e07a7a">费半 SOXX 1.78</text><rect x="620" y="130" width="120" height="8" rx="4" fill="#e07a7a" class="bar" style="animation-delay:.4s"/>
+      <text x="620" y="154" fill="#c4a882">AAPL 1.10</text><rect x="620" y="158" width="74" height="8" rx="4" fill="#c4a882" class="bar" style="animation-delay:.8s"/>
+      <text x="620" y="222" fill="#5ab07a">KO 0.35</text><rect x="620" y="226" width="24" height="8" rx="4" fill="#5ab07a" class="bar" style="animation-delay:1.2s"/>
+      <text x="620" y="200" fill="#8a877e">防御龙头 beta 更低 ↓</text>
+    </g>
+    <text x="620" y="300" font-size="10.5" fill="#8a877e">美股够深:同一股钱</text>
+    <text x="620" y="316" font-size="10.5" fill="#8a877e">能在四层里一路往下找港湾</text>
+  </svg>
+  </div>
+  <div class="nr">
+    <h2><span class="no">美股</span>最深的池子:退潮分四层往下走</h2>
+    <p>美股是全球<b>最深的资金池</b>——退潮的钱不用出海,在自己市场里就能一层层往下找港湾。第一层,先抛<b class="r">高 beta 半导体和 AI 初创</b>(跌最凶);第二层,就近搬进<b>科技现金牛</b>苹果、微软——苹果一半利润来自高毛利的服务订阅、每年千亿级回购托底,beta 明显低于费半,是"科技板块里的避风港";第三层,整个换到<b class="g">防御板块</b>——必需消费(可乐)、医药、公用事业,加迪士尼、精品,经济好坏都要吃喝用电,盈利稳、beta 低;第四层,真恐慌时一部分钱<b class="b">直接离场</b>,涌向现金、美债、黄金、美元。<b>四层港湾一字排开,这是资金池深度带来的奢侈。</b></p>
+    <div class="facts">
+      <span class="fx v">苹果服务 FY24 $962亿 · 占营收 24.6% · 服务毛利 73.9% 远高于硬件 37.2%(10-K)</span>
+      <span class="fx v">活跃设备 23.5 亿+ · 2024 回购授权 $1,100亿(美史上最大)</span>
+      <span class="fx v">β:NVDA 2.21 · 费半 SOXX 1.78 · AAPL 1.10 · KO 0.35(stockanalysis.com)</span>
+      <span class="fx v">三大防御板块=必需消费/医药/公用(Fidelity 商业周期框架)</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 幕3 台湾·美科技卫星 ================= -->
+<section class="scene" id="sc2">
+  <div class="stagebox">
+  <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="幕3 台湾是美科技的卫星 台积电为锚 与费半纳指高度同频 避险转金融高股息传产">
+    <text x="400" y="30" text-anchor="middle" font-size="14" fill="#c4a882" font-weight="700">台湾 · 美科技的"卫星":跟着一起呼吸</text>
+    <!-- 左:美科技太阳 + 台湾卫星轨道 -->
+    <g class="twsun"><circle cx="120" cy="190" r="42" fill="#211f1c" stroke="#c4a882" stroke-width="2"/><text x="120" y="186" text-anchor="middle" font-size="11" fill="#c4a882" font-weight="700">美国科技</text><text x="120" y="202" text-anchor="middle" font-size="9.5" fill="#8a877e">费半 · 纳指</text></g>
+    <g stroke="#7a9fd4" stroke-width="6" opacity=".35" fill="none"><path class="twpulse" d="M120 130 a60 60 0 1 0 .1 0"/></g>
+    <ellipse cx="205" cy="165" rx="108" ry="100" fill="none" stroke="#2a2822" stroke-dasharray="3 6"/>
+    <g class="tworbit"><g transform="translate(313,165)"><g class="twsat"><rect x="-34" y="-20" width="68" height="40" rx="8" fill="#14201a" stroke="#5ab07a" stroke-width="1.5"/><text x="0" y="-2" text-anchor="middle" font-size="10.5" fill="#5ab07a" font-weight="700">台股</text><text x="0" y="13" text-anchor="middle" font-size="8.5" fill="#8a877e">台积电为锚</text></g></g></g>
+    <!-- 同频波形:美 vs 台 叠合 -->
+    <g class="twbox" style="animation-delay:.6s">
+      <text x="640" y="72" text-anchor="middle" font-size="11" fill="#8a877e">费半一动,台股跟着抖</text>
+      <path d="M470 108 q26 -30 52 0 t52 0 t52 0 t52 0" stroke="#e07a7a" stroke-width="2" fill="none" class="twwave"/>
+      <path d="M470 116 q26 -30 52 0 t52 0 t52 0 t52 0" stroke="#5ab07a" stroke-width="2" fill="none" class="twwave" style="animation-delay:.15s" opacity=".85"/>
+      <text x="742" y="104" font-size="9" fill="#e07a7a">费半</text>
+      <text x="742" y="126" font-size="9" fill="#5ab07a">台股</text>
+    </g>
+    <!-- 台积电权重条 -->
+    <g class="twbox" style="animation-delay:.9s">
+      <text x="470" y="168" font-size="11" fill="#c4a882" font-weight="600">台积电 ≈ 加权指数(TAIEX)40% 以上</text>
+      <rect x="470" y="176" width="300" height="16" rx="4" fill="#211f1c" stroke="#4a4740"/>
+      <rect x="470" y="176" width="128" height="16" rx="4" fill="#c4a882" class="bar" style="animation-delay:1s"/>
+      <text x="534" y="188" text-anchor="middle" font-size="9.5" fill="#0c0c0e" font-weight="700">TSMC</text>
+      <text x="684" y="188" text-anchor="middle" font-size="9" fill="#8a877e">其余成分</text>
+    </g>
+    <!-- 避险去向 -->
+    <g class="twbox" style="animation-delay:1.2s">
+      <text x="620" y="228" text-anchor="middle" font-size="11" fill="#5ab07a" font-weight="700">台股避险 → 往岛内躲</text>
+      <g font-size="10">
+        <g><rect x="470" y="242" width="96" height="40" rx="8" fill="#14201a" stroke="#5ab07a"/><text x="518" y="262" text-anchor="middle" fill="#5ab07a">金融股</text><text x="518" y="276" text-anchor="middle" fill="#8a877e" font-size="8.5">升息受益</text></g>
+        <g><rect x="574" y="242" width="112" height="40" rx="8" fill="#14201a" stroke="#5ab07a"/><text x="630" y="262" text-anchor="middle" fill="#5ab07a">高股息 ETF</text><text x="630" y="276" text-anchor="middle" fill="#8a877e" font-size="8.5">0056 · 00878</text></g>
+        <g><rect x="694" y="242" width="76" height="40" rx="8" fill="#14201a" stroke="#5ab07a"/><text x="732" y="262" text-anchor="middle" fill="#5ab07a">传产</text><text x="732" y="276" text-anchor="middle" fill="#8a877e" font-size="8.5">金融/塑化</text></g>
+      </g>
+    </g>
+    <!-- 结构提示 -->
+    <g class="twbox" style="animation-delay:1.5s">
+      <rect x="40" y="300" width="730" height="66" rx="10" fill="#17161a" stroke="#2a2822"/>
+      <text x="58" y="324" font-size="11.5" fill="#c4a882" font-weight="600">结构上,台湾离不开美科技景气</text>
+      <text x="58" y="344" font-size="11" fill="#e8e5de">台积电是全球 AI 芯片的代工核心(≈全球晶圆代工 70%)· 指数约 75% 是电子、出口导向</text>
+      <text x="58" y="360" font-size="10.5" fill="#8a877e">钱可以在岛内从科技躲到金融/高股息,但整个市场的"天气"仍由美科技定</text>
+    </g>
+  </svg>
+  </div>
+  <div class="nr">
+    <h2><span class="no">台湾</span>美科技的"卫星":跟着一起呼吸</h2>
+    <p>台湾市场像一颗<b>绕着美科技转的卫星</b>。<b>台积电(TSMC)是整个加权指数的锚</b>——它一家就占指数三成以上,而它又是全球 AI 芯片的代工核心。加上指数高度科技化、出口导向,台股几乎与<b class="r">费城半导体指数、纳指同频呼吸</b>:美科技一打喷嚏,台湾就跟着抖。真到避险时,岛内的钱会往<b class="g">金融股、高股息 ETF(0056、00878 是台湾散户最爱)、传产</b>躲——但这是"在卫星内部换座位"。结构上,台湾<b>离不开美科技的景气</b>:整个市场的天气,仍由太平洋对岸那颗太阳决定。</p>
+    <div class="facts">
+      <span class="fx v">台积电占加权指数(TAIEX)逾 40% · ≈全球晶圆代工 70%(Taipei Times/CNBC 2026)</span>
+      <span class="fx v">TAIEX 约 75% 电子/半导体 · 台湾占 MSCI 新兴市场 23.8%(MSCI/TWSE)</span>
+      <span class="fx v">隔夜费半 SOX −7.87% → 台股 −2.24%、台积电 −4.02%(Focus Taiwan 2026-06-24)· 同频铁证</span>
+      <span class="fx v">避险转高股息 ETF:五大高息 ETF ≈US$520亿;00878 ~175万股东、0056 ~147万股东(2024)</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 幕4 韩国·记忆体周期 ================= -->
+<section class="scene" id="sc3">
+  <div class="stagebox">
+  <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="幕4 韩国是记忆体周期之国 三星SK海力士撑起KOSPI Korea discount折价 政府Value-up方案推股东回报">
+    <text x="400" y="30" text-anchor="middle" font-size="14" fill="#c4a882" font-weight="700">韩国 · 记忆体周期之国:半个大盘押在内存上</text>
+    <!-- 左:两根支柱撑 KOSPI -->
+    <g class="krbox" style="animation-delay:.1s">
+      <rect x="46" y="150" width="60" height="150" rx="6" fill="#1c1b18" stroke="#c4a882" stroke-width="1.5"/>
+      <rect x="52" y="160" width="48" height="9" rx="2" fill="#c4a882" opacity=".7"/>
+      <text x="76" y="322" text-anchor="middle" font-size="10" fill="#e8e5de">三星电子</text>
+      <text x="76" y="336" text-anchor="middle" font-size="9" fill="#8a877e">26.0%</text>
+    </g>
+    <g class="krbox" style="animation-delay:.35s">
+      <rect x="118" y="182" width="56" height="118" rx="6" fill="#1c1b18" stroke="#c4a882" stroke-width="1.5"/>
+      <rect x="124" y="192" width="44" height="9" rx="2" fill="#c4a882" opacity=".6"/>
+      <text x="146" y="322" text-anchor="middle" font-size="10" fill="#e8e5de">SK海力士</text>
+      <text x="146" y="336" text-anchor="middle" font-size="9" fill="#8a877e">20.9%</text>
+    </g>
+    <g class="krbox" style="animation-delay:.6s">
+      <path d="M40 148 L200 148" stroke="#5ab07a" stroke-width="2"/>
+      <text x="120" y="128" text-anchor="middle" font-size="11" fill="#5ab07a" font-weight="700">≈ 47% KOSPI</text>
+      <text x="120" y="360" text-anchor="middle" font-size="9.5" fill="#8a877e">两家 ≈ 半个大盘</text>
+    </g>
+    <!-- 中:记忆体周期轮 + HBM -->
+    <g class="krbox" style="animation-delay:.9s">
+      <g transform="translate(300,150)"><g class="krcyc"><circle r="40" fill="none" stroke="#2a2822" stroke-width="2" stroke-dasharray="6 6"/><path d="M0 -40 l7 12 -14 0 Z" fill="#7a9fd4"/></g></g>
+      <text x="300" y="154" text-anchor="middle" font-size="10" fill="#8a877e">DRAM/NAND</text>
+      <text x="300" y="205" text-anchor="middle" font-size="10" fill="#8a877e">内存周期</text>
+      <!-- HBM 堆叠 -->
+      <g font-size="9">
+        <g class="krhbm" style="animation-delay:1.1s"><rect x="388" y="176" width="70" height="12" rx="2" fill="#14201a" stroke="#5ab07a"/></g>
+        <g class="krhbm" style="animation-delay:1.25s"><rect x="388" y="162" width="70" height="12" rx="2" fill="#14201a" stroke="#5ab07a"/></g>
+        <g class="krhbm" style="animation-delay:1.4s"><rect x="388" y="148" width="70" height="12" rx="2" fill="#14201a" stroke="#5ab07a"/></g>
+        <g class="krhbm" style="animation-delay:1.55s"><rect x="388" y="134" width="70" height="12" rx="2" fill="#5ab07a"/><text x="423" y="143" text-anchor="middle" fill="#0c0c0e" font-weight="700">HBM</text></g>
+        <text x="423" y="204" text-anchor="middle" fill="#5ab07a">SK海力士 ≈ 57-62%</text>
+        <text x="423" y="217" text-anchor="middle" fill="#8a877e">供 Nvidia · 全球第一</text>
+      </g>
+    </g>
+    <!-- 右上:Korea discount -->
+    <g class="krbox" style="animation-delay:1.2s">
+      <g class="krtag"><path d="M498 58 l150 0 20 22 -20 22 -150 0 Z" fill="#201414" stroke="#e07a7a"/><circle cx="656" cy="80" r="4" fill="#e07a7a"/></g>
+      <text x="566" y="76" text-anchor="middle" font-size="11" fill="#e07a7a" font-weight="700">"Korea discount"</text>
+      <text x="566" y="90" text-anchor="middle" font-size="9" fill="#e8e5de">长期折价 · P/B ≈ 1x(近书面价)</text>
+    </g>
+    <!-- 右下:Value-up 撬杆 -->
+    <g class="krbox" style="animation-delay:1.5s">
+      <rect x="500" y="126" width="270" height="86" rx="10" fill="#17161a" stroke="#5ab07a"/>
+      <text x="635" y="148" text-anchor="middle" font-size="11" fill="#5ab07a" font-weight="700">2024 · 企业 Value-up 方案</text>
+      <text x="516" y="168" font-size="10" fill="#e8e5de">政府推股东回报:分红 · 回购 · 治理</text>
+      <text x="516" y="184" font-size="10" fill="#e8e5de">Value-up 指数 100 家 + ETF + 税优</text>
+      <text x="516" y="202" font-size="9.5" fill="#8a877e">目标:抬 ROE、缩小折价 · 效果渐显</text>
+    </g>
+    <!-- 底:钱去向 -->
+    <g class="krbox" style="animation-delay:1.8s">
+      <rect x="230" y="300" width="540" height="66" rx="10" fill="#17161a" stroke="#2a2822"/>
+      <text x="248" y="324" font-size="11.5" fill="#c4a882" font-weight="600">避险 / 轮动 → Value-up 受益篮子</text>
+      <text x="248" y="344" font-size="11" fill="#e8e5de">低估值、高分红:金融(银行/保险)· 汽车(现代/起亚)· 低 P/B 蓝筹</text>
+      <text x="248" y="360" font-size="10.5" fill="#8a877e">高 beta 内存回调时,钱轮进"改革+分红"这条线</text>
+    </g>
+  </svg>
+  </div>
+  <div class="nr">
+    <h2><span class="no">韩国</span>记忆体周期之国:半个大盘押在内存上</h2>
+    <p>韩国的骨架更极端:<b>三星电子 + SK 海力士两家,就撑起了 KOSPI 的近一半</b>(≈47%)。所以 KOSPI 本质是一张<b class="r">内存周期(DRAM/NAND)+ HBM 的杠杆下注</b>——SK 海力士是供给 Nvidia 的 <b>HBM 全球第一(约 57–62%)</b>,内存景气一转,大盘跟着走。韩股还有个老问题叫"<b class="r">Korea discount</b>":长期折价、P/B 常年在净值附近甚至以下、ROE 偏低,根子在财阀治理和低股东回报。2024 年政府推出<b class="g">企业 Value-up 方案</b>——用指数、ETF、税优逼公司多分红、多回购、改治理,给这个折价市场加了一根撬杆。钱的去向,就顺着这根撬杆,轮进<b>金融、汽车这些低估值、高分红的"改革受益篮子"</b>。</p>
+    <div class="facts">
+      <span class="fx v">三星 26.0% + SK海力士 20.9% ≈ 47% KOSPI(韩交所 KRX · 2026-05)· 2024 底约 23%</span>
+      <span class="fx v">SK海力士 HBM 全球 ≈ 57-62%(2025 · TrendForce/Counterpoint)· 供 Nvidia</span>
+      <span class="fx v">Korea discount:KOSPI P/B ≈ 1x(十年均 ~0.99)· ROE ~7%(AMRO)</span>
+      <span class="fx v">Value-up 方案 2024-02(FSC)· Value-up 指数 100 家 2024-09 · ETF/5%税优</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 幕5 中国·红利港湾 ================= -->
+<section class="scene" id="sc4">
+  <div class="stagebox">
+  <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="幕5 中国大陆缺Apple式二合一龙头 资金流向红利股黄金国债理财存款 红利跑赢成长">
+    <text x="400" y="30" text-anchor="middle" font-size="14" fill="#c4a882" font-weight="700">中国大陆 · 缺"科技现金牛",钱去补红利</text>
+    <!-- 左:内地资金源 -->
+    <g class="cnbox" style="animation-delay:.1s"><rect x="34" y="150" width="94" height="52" rx="10" fill="#1c1b18" stroke="#c4a882"/><text x="81" y="178" text-anchor="middle" font-size="12" fill="#c4a882" font-weight="700">内地资金</text><text x="81" y="194" text-anchor="middle" font-size="9" fill="#8a877e">退潮 · 找确定性</text></g>
+    <g stroke="#5ab07a" stroke-width="1.6" fill="none" opacity=".5">
+      <path d="M128 162 Q210 90 268 82" class="flow"/>
+      <path d="M128 172 Q210 140 268 146" class="flow" style="animation-delay:.3s"/>
+      <path d="M128 182 Q210 210 268 210" class="flow" style="animation-delay:.6s"/>
+      <path d="M128 192 Q210 276 268 274" class="flow" style="animation-delay:.9s"/>
+    </g>
+    <g class="cncoin" style="--dx:170px;--dy:-88px"><circle cx="132" cy="170" r="7" fill="#c4a882"/><text x="132" y="174" text-anchor="middle" font-size="7" fill="#0c0c0e" font-weight="700">$</text></g>
+    <g class="cncoin" style="--dx:170px;--dy:96px;animation-delay:1.1s"><circle cx="132" cy="182" r="7" fill="#c4a882"/><text x="132" y="186" text-anchor="middle" font-size="7" fill="#0c0c0e" font-weight="700">$</text></g>
+    <!-- 中:4 去向 -->
+    <g font-size="11.5">
+      <g class="cnbox" style="animation-delay:.5s"><rect x="270" y="58" width="214" height="46" rx="9" fill="#14201a" stroke="#5ab07a"/><text x="288" y="86" font-size="17">📈</text><text x="314" y="80" fill="#5ab07a" font-weight="600">高股息红利股</text><text x="314" y="96" font-size="9.5" fill="#8a877e">银行·煤炭·电力·运营商</text></g>
+      <g class="cnbox" style="animation-delay:.8s"><rect x="270" y="122" width="214" height="46" rx="9" fill="#14201a" stroke="#c4a882"/><text x="288" y="150" font-size="17">🥇</text><text x="314" y="144" fill="#c4a882" font-weight="600">黄金 / 金条金币</text><text x="314" y="160" font-size="9.5" fill="#8a877e">2024 投资需求 +~20%</text></g>
+      <g class="cnbox" style="animation-delay:1.1s"><rect x="270" y="186" width="214" height="46" rx="9" fill="#14201a" stroke="#5ab07a"/><text x="288" y="214" font-size="17">🏦</text><text x="314" y="208" fill="#5ab07a" font-weight="600">国债 / 银行理财</text><text x="314" y="224" font-size="9.5" fill="#8a877e">2024 债牛 · 10Y 破 2% 创新低</text></g>
+      <g class="cnbox" style="animation-delay:1.4s"><rect x="270" y="250" width="214" height="46" rx="9" fill="#14201a" stroke="#5ab07a"/><text x="288" y="278" font-size="17">💰</text><text x="314" y="272" fill="#5ab07a" font-weight="600">干脆存起来</text><text x="314" y="288" font-size="9.5" fill="#8a877e">超额储蓄堆积 · 钱不投</text></g>
+    </g>
+    <!-- 存款堆 -->
+    <g class="cnpile"><rect x="300" y="312" width="150" height="52" rx="4" fill="#1c1b18" stroke="#4a4740"/><rect x="308" y="320" width="134" height="8" rx="2" fill="#c4a882" opacity=".7"/><rect x="308" y="333" width="134" height="8" rx="2" fill="#c4a882" opacity=".5"/><rect x="308" y="346" width="134" height="8" rx="2" fill="#c4a882" opacity=".35"/></g>
+    <!-- 右:结构解释 -->
+    <g class="cnbox" style="animation-delay:1.6s">
+      <rect x="500" y="58" width="270" height="140" rx="10" fill="#17161a" stroke="#c4a882"/>
+      <text x="635" y="82" text-anchor="middle" font-size="12" fill="#c4a882" font-weight="700">结构:缺"二合一"科技龙头</text>
+      <text x="516" y="106" font-size="10.5" fill="#e8e5de">美股有 Apple 式"强现金流 + 科技成长"</text>
+      <text x="516" y="123" font-size="10.5" fill="#e8e5de">→ 可在科技内低风险调仓</text>
+      <text x="516" y="146" font-size="10.5" fill="#e07a7a">A 股这种现金牛龙头稀缺:</text>
+      <text x="532" y="164" font-size="9.5" fill="#8a877e">腾讯/阿里现金流强、也回购,但在港股</text>
+      <text x="532" y="180" font-size="9.5" fill="#8a877e">茅台是现金牛,却属白酒消费、非科技</text>
+    </g>
+    <g class="cnbox" style="animation-delay:1.9s">
+      <rect x="500" y="210" width="270" height="88" rx="10" fill="#17161a" stroke="#5ab07a"/>
+      <text x="635" y="234" text-anchor="middle" font-size="12" fill="#5ab07a" font-weight="700">于是 · 红利跑赢成长</text>
+      <text x="516" y="256" font-size="10.5" fill="#e8e5de">A 股有自己的港湾:银行、高股息、白酒</text>
+      <text x="516" y="274" font-size="10.5" fill="#e8e5de">2024 起"红利风格"明显跑赢成长</text>
+      <text x="516" y="291" font-size="9.5" fill="#8a877e">红利跑赢 EM 亚洲 ~15%(2024)</text>
+    </g>
+  </svg>
+  </div>
+  <div class="nr">
+    <h2><span class="no">中国</span>缺"科技现金牛",钱去补红利</h2>
+    <p>中国大陆的结构缺了关键一块:<b class="r">Apple 式"强现金流 + 科技成长"的二合一龙头很稀缺</b>——腾讯、阿里现金流强也大手笔回购,但它们挂在港股;茅台是现金牛,却属白酒消费、不是科技。所以 A 股很难像美股那样"在科技内部低风险调仓"。于是内地资金退潮时的港湾很清楚:<b class="g">高股息红利股</b>(银行、煤炭、电力、运营商)、<b>黄金</b>(2024 金条金币投资需求 +约两成)、<b>国债和银行理财</b>(2024 一轮大债牛、十年期收益率跌破 2% 创历史新低),以及干脆<b>存起来</b>(居民超额储蓄堆高、钱索性不投)。结果就是:<b class="b">2024 年起"红利风格"明显跑赢成长</b>——市场用脚投票,补上了自己缺的那个港湾。</p>
+    <div class="facts">
+      <span class="fx v">2024 红利风格明显跑赢 · 红利超 EM 亚洲 ~15%(CNBC/Eastspring)</span>
+      <span class="fx v">2024 金条金币(投资)需求 +~20%(World Gold Council)</span>
+      <span class="fx v">2024-12 中国 10Y 国债跌破 2%、创历史新低(Reuters/SCMP)</span>
+      <span class="fx v">居民存款 2022 +17.8万亿 · 2023 +16.7万亿(PBOC)· 超额储蓄</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 幕6 港股·科技红利出口 ================= -->
+<section class="scene" id="sc5">
+  <div class="stagebox">
+  <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="幕6 港股是大陆资金的科技加红利出口 南向资金通过港股通买腾讯阿里现金牛和高股息央企 AH溢价H股更便宜">
+    <text x="400" y="30" text-anchor="middle" font-size="14" fill="#c4a882" font-weight="700">港股 · 大陆资金的"科技 + 红利"出口</text>
+    <!-- 左:大陆 → 南向管道 → 港股 -->
+    <g class="hkbox" style="animation-delay:.1s"><rect x="34" y="160" width="86" height="80" rx="10" fill="#1c1b18" stroke="#c4a882"/><text x="77" y="192" text-anchor="middle" font-size="11" fill="#c4a882" font-weight="700">大陆</text><text x="77" y="210" text-anchor="middle" font-size="11" fill="#c4a882" font-weight="700">资金</text><text x="77" y="228" text-anchor="middle" font-size="8.5" fill="#8a877e">A股买不到</text></g>
+    <!-- 南向管道 -->
+    <g class="hkbox" style="animation-delay:.4s">
+      <path d="M120 200 L300 200" stroke="#2a2822" stroke-width="14" fill="none"/>
+      <path d="M120 200 L300 200" stroke="#7a9fd4" stroke-width="4" fill="none" class="hkpipe"/>
+      <text x="210" y="186" text-anchor="middle" font-size="10.5" fill="#7a9fd4" font-weight="600">南向 · 港股通</text>
+      <text x="210" y="230" text-anchor="middle" font-size="9.5" fill="#8a877e">2024 净流入 ≈ HK$8,100亿(创纪录)</text>
+    </g>
+    <g class="hkcoin" style="animation-delay:.5s"><circle cx="128" cy="200" r="7" fill="#c4a882"/><text x="128" y="204" text-anchor="middle" font-size="7" fill="#0c0c0e" font-weight="700">$</text></g>
+    <g class="hkcoin" style="animation-delay:1.3s"><circle cx="128" cy="200" r="7" fill="#c4a882"/><text x="128" y="204" text-anchor="middle" font-size="7" fill="#0c0c0e" font-weight="700">$</text></g>
+    <!-- 右:两类港湾 -->
+    <g font-size="11.5">
+      <!-- 科技现金牛 -->
+      <g class="hkbox" style="animation-delay:.8s">
+        <rect x="312" y="56" width="458" height="80" rx="10" fill="#17161a" stroke="#5ab07a"/>
+        <text x="330" y="78" fill="#5ab07a" font-weight="700">① 科技现金牛(A 股买不到,这里买得到)</text>
+        <g class="hkbb"><circle cx="352" cy="108" r="16" fill="#14201a" stroke="#c4a882"/><text x="352" y="112" text-anchor="middle" font-size="9" fill="#c4a882">腾讯</text></g>
+        <text x="378" y="105" font-size="10" fill="#e8e5de">2024 回购 ≈ HK$1,120亿(港股回购王)</text>
+        <text x="378" y="122" font-size="10" fill="#e8e5de">阿里 2024 回购 ≈ US$119亿 · 巨额返还</text>
+      </g>
+      <!-- 高股息央企 -->
+      <g class="hkbox" style="animation-delay:1.1s">
+        <rect x="312" y="146" width="458" height="72" rx="10" fill="#17161a" stroke="#5ab07a"/>
+        <text x="330" y="168" fill="#5ab07a" font-weight="700">② 高股息央企:股息 ~6-7%</text>
+        <text x="330" y="188" font-size="10" fill="#e8e5de">中海油(0883)· 四大行 H 股(工/建/中/农)</text>
+        <text x="330" y="206" font-size="10" fill="#8a877e">现金流稳、分红高 · 市场波动里的压舱石</text>
+      </g>
+      <!-- AH 溢价 -->
+      <g class="hkbox" style="animation-delay:1.4s">
+        <rect x="312" y="228" width="458" height="66" rx="10" fill="#17161a" stroke="#c4a882"/>
+        <text x="330" y="250" fill="#c4a882" font-weight="700">③ AH 溢价:同一家公司,H 股更便宜</text>
+        <rect x="330" y="262" width="300" height="14" rx="4" fill="#211f1c" stroke="#4a4740"/>
+        <rect x="330" y="262" width="240" height="14" rx="4" fill="#c4a882" class="hkgauge"/>
+        <text x="646" y="273" font-size="9.5" fill="#8a877e">溢价 &gt;100 = A 贵 / H 折价</text>
+        <text x="330" y="290" font-size="9.5" fill="#8a877e">同样现金流分红,H 股价更低 → 股息率更高</text>
+      </g>
+    </g>
+    <!-- 底:结构一句 -->
+    <g class="hkbox" style="animation-delay:1.7s">
+      <rect x="34" y="304" width="736" height="60" rx="10" fill="#14201a" stroke="#5ab07a"/>
+      <text x="52" y="328" font-size="11.5" fill="#5ab07a" font-weight="600">港股的独特位置:一个市场,两种港湾都有</text>
+      <text x="52" y="348" font-size="10.5" fill="#e8e5de">中国大陆的科技现金牛(腾讯/阿里/美团)＋ 高股息央企 —— 大陆资金经港股通一站配齐</text>
+    </g>
+  </svg>
+  </div>
+  <div class="nr">
+    <h2><span class="no">港股</span>大陆资金的"科技 + 红利"出口</h2>
+    <p>港股在这盘棋里位置很特殊——它是大陆资金的一个"<b class="b">出海口</b>"。腾讯、阿里、美团这些<b>中国的科技现金牛,都挂在香港、A 股买不到</b>,内地资金想配,唯一的在岸通道就是<b class="b">南向港股通</b>(2024 净流入约 HK$8,100 亿,创纪录)。而香港偏偏两种港湾都有:一边是<b class="g">科技现金牛</b>(腾讯 2024 回购约 HK$1,120 亿、稳坐港股回购王,阿里回购约 US$119 亿),一边是<b class="g">高股息央企</b>(中海油、四大行 H 股,股息率约 6–7%)。更妙的是 <b>AH 溢价</b>:同一家公司,H 股比 A 股便宜,现金流分红一样、股价更低,股息率就更高。<b>大陆买不到的科技现金牛,在这儿买得到;想要的高股息,这儿也管够——一站配齐。</b></p>
+    <div class="facts">
+      <span class="fx v">腾讯 2024 回购 HK$1,120亿 / 3.07亿股(腾讯 2024 年报,港股回购王)</span>
+      <span class="fx v">阿里 2024 回购 ≈ US$119亿 · 剩余授权 $207亿至 2027-03(阿里 6-K)</span>
+      <span class="fx v">南向港股通 2024 净流入 ≈ HK$8,100亿(创纪录 · SCMP 交叉核)</span>
+      <span class="fx q">中海油/四大行 H 股股息率 ~6-7%(聚合快照 · 随价波动)· AH 溢价 &gt;100 H 更便宜</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 幕7 收尾·全球图景 ================= -->
+<section class="scene" id="sc6">
+  <div class="stagebox">
+  <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="幕7 全球图景 五市场五种港湾 深度美国大于卫星台韩大于补红利中国大于混合出口港股 结构决定资金去向">
+    <text x="400" y="30" text-anchor="middle" font-size="14" fill="#c4a882" font-weight="700">全球图景:五个市场,五种"港湾"</text>
+    <!-- 五个港湾卡片 -->
+    <g font-size="11">
+      <g class="fnhar" style="animation-delay:.1s">
+        <rect x="30" y="58" width="146" height="120" rx="10" fill="#17161a" stroke="#5ab07a"/>
+        <text x="103" y="80" text-anchor="middle" font-size="12" fill="#5ab07a" font-weight="700">美股</text>
+        <text x="103" y="100" text-anchor="middle" font-size="10" fill="#c4a882">最深的池子</text>
+        <text x="103" y="120" text-anchor="middle" font-size="9.5" fill="#e8e5de">四层港湾</text>
+        <text x="103" y="136" text-anchor="middle" font-size="9" fill="#8a877e">现金牛→防御</text>
+        <text x="103" y="150" text-anchor="middle" font-size="9" fill="#8a877e">→真离场</text>
+        <text x="103" y="168" text-anchor="middle" font-size="9" fill="#8a877e">不用出海</text>
+      </g>
+      <g class="fnhar" style="animation-delay:.35s">
+        <rect x="186" y="58" width="146" height="120" rx="10" fill="#17161a" stroke="#7a9fd4"/>
+        <text x="259" y="80" text-anchor="middle" font-size="12" fill="#7a9fd4" font-weight="700">台湾</text>
+        <text x="259" y="100" text-anchor="middle" font-size="10" fill="#c4a882">美科技卫星</text>
+        <text x="259" y="120" text-anchor="middle" font-size="9.5" fill="#e8e5de">台积电为锚</text>
+        <text x="259" y="136" text-anchor="middle" font-size="9" fill="#8a877e">躲金融/高股息</text>
+        <text x="259" y="152" text-anchor="middle" font-size="9" fill="#8a877e">但天气看美科技</text>
+      </g>
+      <g class="fnhar" style="animation-delay:.6s">
+        <rect x="342" y="58" width="146" height="120" rx="10" fill="#17161a" stroke="#7a9fd4"/>
+        <text x="415" y="80" text-anchor="middle" font-size="12" fill="#7a9fd4" font-weight="700">韩国</text>
+        <text x="415" y="100" text-anchor="middle" font-size="10" fill="#c4a882">记忆体周期</text>
+        <text x="415" y="120" text-anchor="middle" font-size="9.5" fill="#e8e5de">半个大盘=内存</text>
+        <text x="415" y="136" text-anchor="middle" font-size="9" fill="#8a877e">Korea discount</text>
+        <text x="415" y="152" text-anchor="middle" font-size="9" fill="#8a877e">Value-up 撬分红</text>
+      </g>
+      <g class="fnhar" style="animation-delay:.85s">
+        <rect x="498" y="58" width="146" height="120" rx="10" fill="#17161a" stroke="#5ab07a"/>
+        <text x="571" y="80" text-anchor="middle" font-size="12" fill="#5ab07a" font-weight="700">中国</text>
+        <text x="571" y="100" text-anchor="middle" font-size="10" fill="#c4a882">补红利</text>
+        <text x="571" y="120" text-anchor="middle" font-size="9.5" fill="#e8e5de">缺科技现金牛</text>
+        <text x="571" y="136" text-anchor="middle" font-size="9" fill="#8a877e">红利/黄金/国债</text>
+        <text x="571" y="152" text-anchor="middle" font-size="9" fill="#8a877e">/存款</text>
+      </g>
+      <g class="fnhar" style="animation-delay:1.1s">
+        <rect x="654" y="58" width="146" height="120" rx="10" fill="#17161a" stroke="#c4a882"/>
+        <text x="727" y="80" text-anchor="middle" font-size="12" fill="#c4a882" font-weight="700">港股</text>
+        <text x="727" y="100" text-anchor="middle" font-size="10" fill="#c4a882">科技+红利出口</text>
+        <text x="727" y="120" text-anchor="middle" font-size="9.5" fill="#e8e5de">南向通道</text>
+        <text x="727" y="136" text-anchor="middle" font-size="9" fill="#8a877e">现金牛+高股息</text>
+        <text x="727" y="152" text-anchor="middle" font-size="9" fill="#8a877e">一站配齐</text>
+      </g>
+    </g>
+    <!-- 水往确定性流 -->
+    <g class="fnhar" style="animation-delay:1.4s">
+      <path d="M60 220 L740 220" stroke="#2a2822" stroke-width="8" fill="none"/>
+      <path d="M60 220 L740 220" stroke="#7a9fd4" stroke-width="3" fill="none" class="fnwater"/>
+      <text x="60" y="210" font-size="10.5" fill="#c4a882">退潮的钱</text>
+      <ellipse cx="742" cy="220" rx="20" ry="8" fill="#14201a" stroke="#5ab07a"/>
+      <text x="700" y="244" font-size="10.5" fill="#5ab07a" font-weight="600">流向"确定性"</text>
+      <g class="fndrop"><circle cx="70" cy="212" r="5" fill="#c4a882"/></g>
+      <g class="fndrop" style="animation-delay:1s"><circle cx="70" cy="212" r="5" fill="#c4a882"/></g>
+    </g>
+    <!-- 深度谱 -->
+    <g class="fnhar" style="animation-delay:1.7s">
+      <rect x="60" y="262" width="680" height="46" rx="9" fill="#111820" stroke="#7a9fd4"/>
+      <text x="400" y="282" text-anchor="middle" font-size="11.5" fill="#7a9fd4" font-weight="600">港湾深度谱:美(自成体系)＞ 台/韩(卫星·单周期)＞ 中(补红利)＝ 港(混合出口)</text>
+      <text x="400" y="300" text-anchor="middle" font-size="10" fill="#8a877e">越往右,越靠"外部景气 + 分红/红利"这条确定性线</text>
+    </g>
+    <!-- 收尾金句 -->
+    <g class="fnhar" style="animation-delay:2s">
+      <rect x="60" y="322" width="680" height="52" rx="10" fill="#14201a" stroke="#5ab07a"/>
+      <text x="400" y="344" text-anchor="middle" font-size="12.5" fill="#5ab07a" font-weight="700">结构决定资金去向 · 钱往确定性流</text>
+      <text x="400" y="363" text-anchor="middle" font-size="10.5" fill="#e8e5de">同一股退潮的力量,在五种市场骨架里,长出了五种不同的港湾</text>
+    </g>
+  </svg>
+  </div>
+  <div class="nr">
+    <h2><span class="no">收尾</span>结构决定资金去向 · 钱往确定性流</h2>
+    <p>把五个市场并排看,故事就完整了。同样是<b class="r">高弹性科技退潮</b>,钱去哪,取决于每个市场的<b>骨架</b>:<b class="g">美股</b>池子最深,四层港湾一路往下,不用出海;<b class="b">台湾、韩国</b>是"卫星",一个绑着美科技景气、一个绑着内存周期,避险只能在单一周期内换座位;<b class="g">中国大陆</b>缺科技现金牛,就用红利、黄金、国债、存款补上港湾;<b class="gold">港股</b>则是大陆资金的混合出口,科技现金牛加高股息一站配齐。从美到港,港湾越来越依赖"外部景气 + 分红红利"这条<b>确定性</b>线。一句话收束这趟旅程:<b class="b">结构决定资金去向,钱像水一样,往确定性的低处流。</b></p>
+    <div class="facts">
+      <span class="fx q">五市场港湾对照 = 本片主线综合(定性图景)</span>
+      <span class="fx q">"结构决定去向、钱往确定性流" = 全片 through-line(机制+定性)</span>
+    </div>
+    <div class="src-inline"></div>
+  </div>
+</section>
+
+<div class="legend">图例:<span style="color:var(--grn)">✓ 英文源查证过的数字/框架</span> · <span>◻ 定性 / 机制框架(不含具体数)</span> · 教育性市场机制科普 · 非买卖建议</div>
+
+<details class="src">
+  <summary>数据来源(点开)</summary>
+  <ul id="srclist">
+    <li><b>美股</b> · 苹果 FY2024:服务营收 $962亿(占 24.6%)· 服务毛利 73.9% vs 硬件 37.2% — Apple Form 10-K(SEC);2024-05 授权 $1,100亿回购、活跃设备逾 23.5 亿 — Apple Newsroom / CNBC;Beta(stockanalysis.com,2026-07):NVDA 2.21 · SOXX 1.78 · AAPL 1.10 · KO 0.35;三大防御板块 — Fidelity《Business Cycle Approach to Equity Sector Investing》</li>
+    <li><b>台湾</b> · 台积电占加权指数(TAIEX)逾 40%、≈全球晶圆代工 70% — Taipei Times(2026-05-05)/ CNBC(2026-05-12);TAIEX 约 75% 电子、台湾占 MSCI 新兴市场 23.76% — MSCI / Focus Taiwan(2026-05-13);同频铁证:隔夜费半 SOX −7.87% → 台股 −2.24%、台积电 −4.02% — Focus Taiwan(2026-06-24);高股息 ETF:五大高息 ETF ≈NT$1.57兆 / US$520亿、00878 ~175万股东、0056 ~147万股东 — Nomad Semi(2024)/ CommonWealth Magazine</li>
+    <li><b>韩国</b> · 三星 26.0% + SK海力士 20.9% ≈ 47% KOSPI(Korea Exchange KRX,2026-05,via BigGo)· 2024 底约 23%;SK海力士 HBM 全球 ~57-62%(TrendForce/Counterpoint,2025)· 供 Nvidia;Korea discount:KOSPI P/B ≈ 1x(十年均 ~0.99)、ROE ~7% — AMRO;企业 Value-up 方案 2024-02(FSC)· Value-up 指数 100 家 2024-09(KRX)· ETF 2024-11 · 5% 税优 — FSC/KED Global/PwC</li>
+    <li><b>中国</b> · 2024 红利风格跑赢、超 EM 亚洲 ~15% — CNBC/Eastspring;金条金币投资需求 2024 +~20% — World Gold Council《Gold Demand Trends》;10Y 国债 2024-12 破 2% 创新低 — Reuters/SCMP;居民存款 2022 +17.8万亿、2023 +16.7万亿 — PBOC(via Reuters)</li>
+    <li><b>港股</b> · 腾讯 2024 回购 HK$1,120亿 / 3.07亿股 — 腾讯 2024 年度业绩公告;阿里 2024 回购 ≈ US$119亿、剩余授权 $207亿至 2027-03 — Alibaba 业绩更新 / SEC 6-K;南向港股通 2024 净流入 ≈ HK$8,100亿(创纪录)— SCMP 交叉核 / HKEX 官方 Stock Connect 数据;中海油/四大行 H 股股息率 ~6-7%(聚合快照)— Simply Wall St / stockanalysis.com;恒生 AH 溢价 &gt;100(H 股折价)· 2024-02 峰值 157.89 — Hang Seng Indexes / Bloomberg / SCMP;腾讯/阿里/美团挂港股、经港股通供大陆买 — SCMP/CNBC</li>
+    <li>主线框架:高弹性退潮→资金找确定性港湾、板块/市场轮动由利率·景气·风险偏好·流动性驱动 — Fidelity / Sam Stovall 板块轮动模型(教育性框架)</li>
+  </ul>
+</details>
+</main>
+
+<footer class="ctrl">
+  <button id="prev">◀ 上一幕</button>
+  <div class="dots" id="dots"></div>
+  <button id="next">下一幕 ▶</button>
+  <button id="pp" title="暂停/继续当前幕的动画">⏸ 动画</button>
+  <button id="rp" title="重播当前幕">↻ 重播</button>
+  <button id="vbtn" title="语音讲解 · 逐幕朗读,读完自动进下一幕(神经语音,浏览器 TTS 兜底)">🔊 讲解</button>
+  <select id="vsel" class="vsel" title="讲解人声"></select>
+  <span class="cnt" id="cnt"></span>
+  <span class="vstat" id="vstat"></span>
+</footer>
+
+<script>
+(function(){
+  var qs=new URLSearchParams(location.search);
+  var embed=qs.get('embed')==='1';
+  var nid=qs.get('nid')||'529', node=qs.get('node')||'资金流出故事';
+  if(embed)document.body.classList.add('embed');
+  document.getElementById('nodechip').textContent='N'+nid+' · '+node;
+
+  var scenes=[].slice.call(document.querySelectorAll('.scene'));
+  var N=scenes.length, cur=0;
+  function sceneTag(i){ return ['开场·退潮','美股·最深的池子','台湾·美科技卫星','韩国·记忆体周期','中国·红利港湾','港股·科技红利出口','收尾·全球图景'][i]||('幕'+i); }
+  var dots=document.getElementById('dots');
+  scenes.forEach(function(_,i){
+    var d=document.createElement('button');
+    d.className='dot';
+    d.title=sceneTag(i);
+    d.onclick=function(){go(i);};
+    dots.appendChild(d);
+  });
+  var prev=document.getElementById('prev'),next=document.getElementById('next'),
+      pp=document.getElementById('pp'),rp=document.getElementById('rp'),cnt=document.getElementById('cnt');
+
+  function go(i){
+    if(i<0||i>=N)return;
+    cur=i;
+    document.body.classList.remove('paused'); pp.textContent='⏸ 动画';
+    scenes.forEach(function(s,k){s.classList.toggle('on',k===i);});
+    [].slice.call(dots.children).forEach(function(d,k){d.classList.toggle('on',k===i);});
+    prev.disabled=(i===0); next.disabled=(i===N-1);
+    cnt.textContent=sceneTag(i)+' · '+(i+1)+'/'+N;
+    window.scrollTo({top:0});
+    if(narrOn)narrateScene(i);
+  }
+  prev.onclick=function(){go(cur-1);};
+  next.onclick=function(){go(cur+1);};
+  pp.onclick=function(){
+    var p=document.body.classList.toggle('paused');
+    pp.textContent=p?'▶ 动画':'⏸ 动画';
+  };
+  rp.onclick=function(){
+    var s=scenes[cur]; s.classList.remove('on'); void s.offsetWidth; s.classList.add('on');
+    document.body.classList.remove('paused'); pp.textContent='⏸ 动画';
+  };
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowLeft')go(cur-1);
+    else if(e.key==='ArrowRight')go(cur+1);
+  });
+
+  /* ===== 语音讲解 · 神经语音(/api/quiz-tts)· 浏览器 TTS 兜底 ===== */
+  var NARR=[
+    {zh:"先记住一件事:每一轮行情里,高弹性科技——中小半导体、AI 初创——涨得最猛,退潮时也跌得最凶,资金总是先从这里撤。但撤出来的钱不会凭空消失,它只会换个地方待着,去找回报和确定性更高的港湾。有意思的是,每个市场的结构不同,港湾长得也不一样。接下来是一趟横跨美股、台湾、韩国、中国大陆、港股五个市场的资金去向之旅——看同一股退潮的力量,在五种不同的市场骨架里,分别流向了哪里。主线只有一句:结构决定资金去哪,钱像水一样,往确定性的低处流。",
+     en:"Remember one thing: in every cycle, high-beta tech — small-cap semis and AI startups — rises hardest and falls hardest, so money always retreats from here first. But that money doesn't vanish; it just moves to a harbor with higher return and more certainty. The interesting part: every market has a different structure, so its harbors look different too. What follows is a journey of where capital goes across five markets — the US, Taiwan, Korea, mainland China and Hong Kong — watching the same receding tide flow into five different market skeletons. One through-line: structure decides where money goes, and capital flows like water toward the low ground of certainty."},
+    {zh:"先看美股——全球最深的资金池。退潮的钱不用出海,在自己市场里就能一层层往下找港湾。第一层,先抛高 beta 的半导体和 AI 初创,它们跌得最凶;第二层,就近搬进科技现金牛苹果、微软——苹果一半利润来自高毛利的服务订阅,每年上千亿回购托底,beta 明显低于费半,是科技板块里的避风港;第三层,整个换到防御板块,必需消费、医药、公用事业,再加迪士尼和精品,经济好坏人都要吃喝用电,盈利稳、beta 低;第四层,真恐慌的时候,一部分钱直接离场,涌向现金、美债、黄金、美元。四层港湾一字排开,这是资金池够深带来的奢侈。",
+     en:"Start with the US — the deepest pool in the world. The receding money doesn't need to go abroad; it can find harbors layer by layer at home. Layer one: sell the high-beta semis and AI startups that fall hardest. Layer two: move next door into cash-flow leaders Apple and Microsoft — half of Apple's profit is high-margin services, hundreds of billions in buybacks support it, and its beta is clearly below the chip index, the harbor inside tech. Layer three: rotate entirely into defensives — staples, healthcare, utilities, plus Disney and luxury — people eat, drink and use power in any economy, so earnings are steady and beta is low. Layer four: in real panic a portion leaves stocks outright, into cash, Treasuries, gold and the dollar. Four harbors in a row — the luxury of a deep pool."},
+    {zh:"再看台湾,它像一颗绕着美科技转的卫星。台积电是整个加权指数的锚,一家就占指数四成以上,而它又是全球 AI 芯片的代工核心,占了全球晶圆代工约七成。加上指数大约四分之三是电子、出口导向,台股几乎和费城半导体指数、纳指同频呼吸——美科技一打喷嚏,台湾就跟着抖。举个例子,2026 年 6 月,费半指数隔夜跌了近百分之八,第二天台股就跟着跌两个多百分点、台积电跌了百分之四。真到避险的时候,岛内的钱会往金融股、高股息 ETF、传产躲,像 0056、00878 这些高股息 ETF 是台湾散户的最爱,持有人多达上百万。但这是在卫星内部换座位:结构上,台湾离不开美科技的景气,整个市场的天气,仍由太平洋对岸那颗太阳决定。",
+     en:"Next, Taiwan — a satellite orbiting US tech. TSMC is the anchor of the entire weighted index, more than 40% of it alone, and it's the world's core foundry for AI chips, about 70% of global foundry. With an index that's roughly three-quarters electronics and export-driven, Taiwan breathes almost in sync with the Philadelphia semiconductor index and the Nasdaq — when US tech sneezes, Taiwan trembles. For example, in June 2026 the semiconductor index fell nearly 8% overnight, and the next day Taiwan's index dropped over two percent with TSMC down four. In risk-off, island money hides in financials, high-dividend ETFs and legacy industries — high-dividend ETFs like 0056 and 00878 are beloved by Taiwanese retail, with over a million holders each. But this is changing seats inside the satellite: structurally, Taiwan can't decouple from the US tech cycle. The whole market's weather is still set by that sun across the Pacific."},
+    {zh:"韩国的骨架更极端。三星电子加上 SK 海力士两家,就撑起了 KOSPI 的近一半。所以韩国大盘本质上是一张内存周期加 HBM 的杠杆下注——SK 海力士是供给英伟达的 HBM 全球第一,大约百分之五十七到六十二,内存景气一转,大盘跟着走。韩股还有个老问题叫 Korea discount,长期折价,市净率常年在净值附近甚至更低,ROE 偏低,根子在财阀治理和低股东回报。2024 年政府推出企业 Value-up 方案,用指数、ETF、税收优惠逼公司多分红、多回购、改善治理,给这个折价市场加了一根撬杆。钱的去向就顺着这根撬杆,轮进金融、汽车这些低估值、高分红的改革受益篮子。",
+     en:"Korea's skeleton is even more extreme. Samsung Electronics plus SK Hynix together hold nearly half of KOSPI. So the Korean index is essentially a leveraged bet on the memory cycle and HBM — SK Hynix is the world's number one in HBM supplied to Nvidia, roughly fifty-seven to sixty-two percent, so when memory turns, the index follows. Korea also has an old problem called the Korea discount: persistent undervaluation, price-to-book hovering around or below book value for years, low ROE, rooted in chaebol governance and weak shareholder returns. In 2024 the government launched the Corporate Value-up Program, using an index, ETFs and tax incentives to push firms to pay more dividends, buy back more shares and improve governance — a lever on this discounted market. Money follows that lever, rotating into financials and autos, the cheap, high-payout reform beneficiaries."},
+    {zh:"轮到中国大陆。它的结构缺了关键一块:Apple 式那种强现金流加科技成长的二合一龙头很稀缺——腾讯、阿里现金流强也大手笔回购,但挂在港股;茅台是现金牛,却属于白酒消费、不是科技。所以 A 股很难像美股那样在科技内部低风险调仓。于是内地资金退潮时的港湾很清楚:高股息红利股,银行、煤炭、电力、运营商;黄金,2024 年金条金币投资需求涨了大约两成;国债和银行理财,2024 年一轮大债牛,十年期收益率跌破百分之二、创了历史新低;还有干脆存起来,居民超额储蓄堆得很高。结果就是,2024 年起红利风格明显跑赢成长——市场用脚投票,补上了自己缺的那个港湾。",
+     en:"Now mainland China. Its structure is missing a key piece: Apple-style leaders that combine strong cash flow with tech growth are scarce — Tencent and Alibaba have strong cash flow and big buybacks, but they're listed in Hong Kong; Moutai is a cash cow but it's liquor, not tech. So A-shares struggle to rotate low-risk within tech like the US does. So the harbors for retreating mainland money are clear: high-dividend stocks — banks, coal, power, telecoms; gold, whose 2024 bar-and-coin investment demand rose about twenty percent; government bonds and bank wealth products, in a big 2024 bond rally where the ten-year yield fell below two percent to a record low; and simply saving, with household excess savings piling up. The result: since 2024 the dividend style has clearly beaten growth — the market voting with its feet, building the harbor it was missing."},
+    {zh:"最后是港股,它在这盘棋里位置很特殊,是大陆资金的一个出海口。腾讯、阿里、美团这些中国的科技现金牛,都挂在香港、A 股买不到,内地资金想配,唯一的在岸通道就是南向港股通,2024 年净流入大约八千一百亿港币,创了纪录。而香港偏偏两种港湾都有:一边是科技现金牛,腾讯 2024 年回购大约一千一百二十亿港币,稳坐港股回购王,阿里回购大约一百一十九亿美元;一边是高股息央企,中海油、四大行的 H 股,股息率大约六到七个百分点。更妙的是 AH 溢价,同一家公司,H 股比 A 股便宜,现金流分红一样、股价更低,股息率就更高。大陆买不到的科技现金牛,在这儿买得到;想要的高股息,这儿也管够,一站配齐。",
+     en:"Finally Hong Kong, with a special place in this game — an outlet to sea for mainland capital. Tencent, Alibaba and Meituan, China's tech cash cows, are all listed in Hong Kong and can't be bought in A-shares; the only onshore route for mainland money is the Southbound Stock Connect, with net inflows of about 810 billion Hong Kong dollars in 2024, a record. And Hong Kong happens to host both kinds of harbor: on one side the tech cash cows — Tencent bought back about 112 billion Hong Kong dollars of stock in 2024, the buyback king, and Alibaba about 11.9 billion US dollars; on the other, high-dividend state champions — CNOOC and the big-four banks' H-shares, yielding around six to seven percent. Better still is the AH premium: for the same company, H-shares are cheaper than A-shares, same cash flow and dividends at a lower price, so the yield is higher. The tech cash cows the mainland can't buy at home, it can buy here; the high dividends it wants are here too — all in one stop."},
+    {zh:"把五个市场并排看,故事就完整了。同样是高弹性科技退潮,钱去哪,取决于每个市场的骨架。美股池子最深,四层港湾一路往下,不用出海;台湾、韩国是卫星,一个绑着美科技景气,一个绑着内存周期,避险只能在单一周期内换座位;中国大陆缺科技现金牛,就用红利、黄金、国债、存款补上港湾;港股则是大陆资金的混合出口,科技现金牛加高股息一站配齐。从美到港,港湾越来越依赖外部景气加分红红利这条确定性线。一句话收束这趟旅程:结构决定资金去向,钱像水一样,往确定性的低处流。",
+     en:"Put the five markets side by side and the story is complete. From the same tech pullback, where money goes depends on each market's skeleton. The US pool is deepest, four harbors all the way down, no need to go abroad. Taiwan and Korea are satellites — one tied to the US tech cycle, one to the memory cycle — able only to change seats within a single cycle. Mainland China lacks tech cash cows, so it builds harbors from dividends, gold, bonds and deposits. Hong Kong is the mainland's mixed outlet, tech cash cows and high dividends in one stop. From the US to Hong Kong, the harbors lean more and more on that certainty line of external cycle plus dividends. One line to close the journey: structure decides where capital goes, and money flows like water toward the low ground of certainty."}
+  ];
+  var VOICES=[
+    ['zh-CN-XiaoxiaoNeural','晓晓 · 女声(推荐)'],
+    ['zh-CN-YunxiNeural','云希 · 男声'],
+    ['zh-CN-YunyangNeural','云扬 · 播报男声'],
+    ['zh-TW-HsiaoChenNeural','曉臻 · 台湾女声'],
+    ['zh-TW-YunJheNeural','雲哲 · 台湾男声'],
+    ['en-US-AvaMultilingualNeural','Ava · 英文女声'],
+    ['en-US-AndrewMultilingualNeural','Andrew · 英文男声']
+  ];
+  var vbtn=document.getElementById('vbtn'), vsel=document.getElementById('vsel'), vstat=document.getElementById('vstat');
+  VOICES.forEach(function(v){ vsel.appendChild(new Option(v[1],v[0])); });
+  var narrOn=false, curVoice=VOICES[0][0], playToken=0, actx=null, curSrc=null;
+  var clipCache=new Map();
+  function shortLabel(v){ for(var i=0;i<VOICES.length;i++) if(VOICES[i][0]===v) return VOICES[i][1].split('(')[0].trim(); return v; }
+  function isEn(v){ return /^en/i.test(v||curVoice); }
+  function setStat(t){ vstat.textContent=t||''; }
+  function ensureCtx(){ if(!actx){ try{ actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } if(actx&&actx.state==='suspended')actx.resume(); return actx; }
+  function textFor(i){ var n=NARR[i]||{}; return isEn()?(n.en||n.zh||''):(n.zh||''); }
+  // [iOS 修复] 复用一个 <audio> 播神经 mp3(WebAudio 在 iOS 不出声;背景音乐能响证明 <audio> 可用)
+  var narrAudio=new Audio(); narrAudio.preload='auto';
+  (function(){ var unlocked=false;
+    function _slw(){ var sr=8000,n=(sr*0.05)|0,ab=new ArrayBuffer(44+n*2),v=new DataView(ab),w=function(o,t){for(var i=0;i<t.length;i++)v.setUint8(o+i,t.charCodeAt(i));};
+      w(0,'RIFF');v.setUint32(4,36+n*2,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,sr,true);v.setUint32(28,sr*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*2,true);
+      return URL.createObjectURL(new Blob([ab],{type:'audio/wav'})); }
+    function unlock(){ if(unlocked)return; unlocked=true; try{ narrAudio.src=_slw(); var p=narrAudio.play(); if(p&&p.then)p.then(function(){try{narrAudio.pause();narrAudio.currentTime=0;}catch(e){}}).catch(function(){}); }catch(e){} }
+    ['touchend','pointerdown','mousedown','click','keydown'].forEach(function(ev){ document.addEventListener(ev,unlock,true); });
+  })();
+  function clip(text,voice){ var k=voice+'|'+text; if(!clipCache.has(k)){
+      var m=(window.__NARR_AUDIO||{})[voice+'||'+text.slice(0,590)];
+      clipCache.set(k, m ? Promise.resolve(m) : Promise.reject(new Error('no-static-audio')));
+    } return clipCache.get(k); }
+  function stopNarr(){ try{narrAudio.pause();}catch(e){} if('speechSynthesis'in window)speechSynthesis.cancel(); }
+  function speakBrowser(text,voice,token){ return new Promise(function(res){
+      if(!('speechSynthesis'in window)||!text||token!==playToken){ res(); return; }
+      var u=new SpeechSynthesisUtterance(text); u.lang=isEn(voice)?'en-US':'zh-CN';
+      var vs=speechSynthesis.getVoices(); var mv=vs.find(function(x){ return (isEn(voice)?/^en/i:/^zh/i).test(x.lang); });
+      if(mv)u.voice=mv; u.rate=1;
+      var done=false, fin=function(){ if(!done){ done=true; res(); } }; u.onend=fin; u.onerror=fin;
+      setTimeout(fin, Math.min(60000, 1200+text.length*(isEn(voice)?90:300)));
+      speechSynthesis.speak(u);
+    }); }
+  function speak(text,voice,token){
+    if(!text) return Promise.resolve();
+    return clip(text,voice).then(function(buf){ return new Promise(function(res){
+        if(token!==playToken){ res(); return; }
+        narrAudio.onended=function(){ res(); }; narrAudio.onerror=function(){ res(); };
+        narrAudio.src=buf; try{narrAudio.currentTime=0;}catch(e){} var _p=narrAudio.play(); if(_p&&_p.catch)_p.catch(function(){ res(); });
+        setStat('🔈 '+shortLabel(voice));
+      }); }).catch(function(){
+        if(token!==playToken) return;
+        setStat('🔈 系统语音 · 神经语音这句没取到');
+        return speakBrowser(text,voice,token);
+      });
+  }
+  function narrateScene(i){
+    stopNarr(); var token=++playToken;
+    var nx=textFor(i+1); if(nx) clip(nx,curVoice).catch(function(){});
+    speak(textFor(i),curVoice,token).then(function(){
+      if(!narrOn||token!==playToken)return;
+      if(cur<N-1) go(cur+1);
+      else setNarr(false);
+    });
+  }
+  function preview(){
+    stopNarr(); var token=++playToken;
+    var s=isEn()?('Hi, this is '+shortLabel(curVoice).split(' ')[0]+'. I will narrate this story.')
+                :('你好,我是'+shortLabel(curVoice).split(' ·')[0]+',这段故事由我来讲。');
+    speak(s,curVoice,token);
+  }
+  function setNarr(on){
+    narrOn=on; vbtn.classList.toggle('on',on); vbtn.textContent=on?'🔊 讲解中':'🔊 讲解';
+    if(!on){ stopNarr(); playToken++; setStat(''); }
+  }
+  vbtn.onclick=function(){ if(narrOn){ setNarr(false); } else { ensureCtx(); setNarr(true); narrateScene(cur); } };
+  vsel.onchange=function(){ curVoice=vsel.value; ensureCtx(); if(narrOn)narrateScene(cur); else preview(); };
+  function guard(){ if(narrOn && document.body.clientWidth===0) setNarr(false); }
+  setInterval(guard,1500);
+
+  go(0);
+})();
+</script>
+</body>
+</html>

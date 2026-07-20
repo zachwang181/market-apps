@@ -1,0 +1,111 @@
+{
+  "meta": {
+    "title": "芯片库存 DOI 监测",
+    "icon": "📦",
+    "kind": "监测 App",
+    "asof": "2026-07-19"
+  },
+  "modules": [
+    {
+      "type": "numcompare", "icon": "📐", "title": "行业水位 · 两口径", "asof": "2026-05-15",
+      "sources": [
+        { "label": "JPM 研究(Yahoo Finance 转述 2026-05-15)", "url": "https://uk.finance.yahoo.com/news/jp-morgan-sees-semiconductor-sector-104700563.html" },
+        { "label": "Jimmy Investor Substack(130/118 · 待确认)", "url": "https://jimmysjournal.substack.com/p/semiconductor-industry-outlook-2026" }
+      ],
+      "data": {
+        "cols": ["Q4'25", "Q1'26", "环比"],
+        "rows": [
+          { "label": "JPM 行业库存天数", "vals": ["139天", "149天", "+3.9%"] },
+          { "label": "博客口径 ⚠️待确认", "vals": ["118天=5年均值", "~130天(2025年底)", "—"] }
+        ]
+      },
+      "note": "JPM:季调后仅低于常态 0.6%(Q4 是低 2.1%)、分销库存仍远低于季节常态 → 判为补库上行、非过剩警报。130/118 出自 Substack 个人博客、未注明数据供应商与方法论 → 当参考不当事实。⚠️「连续多季上升」在行业整体层面目前只有 139→149 一个干净环比点,更早季度序列待确认。"
+    },
+    {
+      "type": "rawtable", "icon": "🧾", "title": "各家 DIO 读数(紧→松)", "asof": "2026-07-19",
+      "sources": [
+        { "label": "NVDA 10-Q(SEC 亲算)", "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000052/nvda-20260426.htm" },
+        { "label": "AMD 10-Q(SEC 亲算)", "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000076/amd-20260328.htm" },
+        { "label": "onsemi 10-Q(SEC 亲算)", "url": "https://www.sec.gov/Archives/edgar/data/1097864/000109786426000014/on-20260403.htm" },
+        { "label": "MU FQ2'26 电话会", "url": "https://www.fool.com/earnings/call-transcripts/2026/03/18/micron-mu-q2-2026-earnings-call-transcript/" },
+        { "label": "MU FQ3'26 业绩稿(SEC 亲算 · 本 app 新补)", "url": "https://www.sec.gov/Archives/edgar/data/723125/000072312526000013/a2026q3ex991-pressrelease.htm" },
+        { "label": "TSMC · MacroMicro", "url": "https://en.macromicro.me/series/2757/tw-2330_tw-days_of_inventory_original" },
+        { "label": "onsemi 历史区间 · GuruFocus", "url": "https://www.gurufocus.com/term/days-inventory/ON" }
+      ],
+      "data": {
+        "cols": ["公司", "DIO", "数据期", "口径", "松紧"],
+        "rows": [
+          ["TSMC", "~68-70天", "2025Q4~26Q1", "第三方 MacroMicro", "🟢 天然低(代工接单制)"],
+          ["NVDA", "≈115天", "FY27Q1 · 至2026-04-26", "SEC 10-Q 亲算", "🟡 中性 · 爬坡期不算警戒"],
+          ["MU", "123天 → 亲算≈122天", "FQ2'26 → FQ3'26 · 至2026-05-28", "电话会自述 + SEC 亲算(新)", "🟢 DRAM<120天 especially tight"],
+          ["AMD", "≈151-160天", "2026Q1 · 至2026-03-28", "SEC 10-Q 亲算", "🟡 为 MI350 爬坡备货 · 环比持平"],
+          ["onsemi", "~200-205天", "2026Q1 · 至2026-04-03", "电话会转述 + SEC 亲算", "🔴 高 · 上季191 · 高于5年均值~33天"]
+        ]
+      },
+      "note": "亲算公式 = 期末存货 ÷ 季度COGS × 91天。NVDA 库存额 $25.8B(YoY+128%)部分含 H20 对华受限因素(前一年同期计提 $4.5B)、成品 $9.2B 值得跟踪。MU FQ3'26 为本 app 新补亲算:存货 $8,567M ÷ COGS $6,400M × 91 ≈ 122天(环比基本持平;同法回验 FQ2 = 123.2天、与管理层自述 123 一致)。半导体无单一阈值:贸易商 ~50-60 / IDM ~110-120 / 代工 ~70 / 模拟功率历史 110-205(median ~125)。"
+    },
+    {
+      "type": "opinions", "icon": "🏋️", "title": "杠铃分化 · 核心研判", "asof": "2026-07-19",
+      "sources": [
+        { "label": "Bloomberg AI 存储紧缺", "url": "https://www.bloomberg.com/graphics/2026-ai-boom-memory-chip-shortage/" }
+      ],
+      "data": { "items": [
+        { "who": "AI 链(NVDA/MU/AMD/HBM)", "dir": "战略备货 · 相对需求仍紧", "up": 1,
+          "q": "库存上升是需求强的信号:MU DRAM<120天 'especially tight'、HBM 2026 全年售罄(仅能满足关键客户 50-66%)、NVDA/AMD 为爬坡备货 — 不是走弱",
+          "src": { "label": "MU FQ2'26 电话会", "url": "https://www.fool.com/earnings/call-transcripts/2026/03/18/micron-mu-q2-2026-earnings-call-transcript/" } },
+        { "who": "非 AI 链(模拟/功率/MCU/汽车工业)", "dir": "高库存 · 去化中", "up": -1,
+          "q": "onsemi ~200天、STM/GD MCU 库存历史高位去化慢、汽车去库存 2027 才复苏 — 传统下行警报,但属旧周期滞后修正,不是 AI 见顶",
+          "src": { "label": "Morgan Stanley 2026(PANews 转述)", "url": "https://www.panews.io/articles/019e166c-f607-756c-936e-bf4b4f305048" } },
+        { "who": "N429 一句话研判", "dir": "预警观察中 · 未确认",
+          "q": "警报『半响未响』:整体 139→149 上行是事实(amber),但被 AI 战略备货 + 非 AI 滞后修正主导,『连续上升=泡沫破裂』因果尚未成立。触发条件:NVDA/MU 成品库存+DIO 开始爬升 且 DRAM/HBM 由紧转松(= 库存涨是因为卖不动、不是预备货)",
+          "src": { "label": "001 调研 · relation/N429 · 2026-07-19" } }
+      ] }
+    },
+    {
+      "type": "rawtable", "icon": "🕰", "title": "历史锚点 · 2022-23 DRAM 崩盘", "asof": "2023",
+      "sources": [
+        { "label": "CNBC 2023-07-28", "url": "https://www.cnbc.com/2023/07/28/how-the-world-went-from-a-semiconductor-shortage-to-a-major-glut.html" },
+        { "label": "Medium(TrendForce/Reuters 二手转述)", "url": "https://medium.com/@Elongated_musk/memory-supercycle-how-ais-hbm-hunger-is-squeezing-dram-and-what-to-own-79c316f89586" }
+      ],
+      "data": {
+        "cols": ["阶段", "DRAM 原厂库存"],
+        "rows": [
+          ["正常水位", "~10周"],
+          ["2022H2–2023初(glut 顶)", "~31周"],
+          ["砍产后回落", "~8周"]
+        ]
+      },
+      "note": "存储暴跌前库存 10→31周(TrendForce/Reuters 口径)=「库存飙升=周期顶部」的经典案例。注意口径是周数、非 DIO 天数;来源为二手转述。"
+    },
+    {
+      "type": "timeline", "icon": "🗓", "title": "下一批跟踪点", "asof": "2026-07-19",
+      "sources": [
+        { "label": "onsemi PR 2026-07-16", "url": "https://www.globenewswire.com/news-release/2026/07/16/3328808/0/en/onsemi-to-Announce-Second-Quarter-Financial-Results.html" },
+        { "label": "AMD PR 2026-07-08", "url": "https://www.amd.com/en/newsroom/press-releases/2026-7-8-amd-to-report-fiscal-second-quarter-2026-financial.html" },
+        { "label": "NVDA 日历口径", "url": "https://www.tipranks.com/stocks/nvda/earnings" },
+        { "label": "MU 日历口径", "url": "https://www.investing.com/equities/micron-tech-earnings" },
+        { "label": "TSMC IR 日历", "url": "https://investor.tsmc.com/english/financial-calendar" }
+      ],
+      "data": { "events": [
+        { "date": "2026-08-03", "label": "onsemi Q2'26 财报", "sub": "已官宣 · 盘后+电话会 5pm ET · 看 DIO 是否从 ~200 续升(非AI去化进度)" },
+        { "date": "2026-08-04", "label": "AMD Q2'26 财报", "sub": "已官宣 · 盘后 · 看 MI350 备货是否开始消化(存货$8.0B 环比走向)" },
+        { "date": "2026-08-26", "label": "NVDA FY27Q2 财报", "sub": "日历口径 · 待官宣确认 · 盯成品库存 $9.2B 与 DIO≈115 走向" },
+        { "date": "2026-09-29", "label": "MU FQ4'26 财报", "sub": "日历口径 · 待官宣确认 · 盯 DRAM/HBM 是否由紧转松(触发条件核心)" },
+        { "date": "2026-10-08", "label": "TSMC 九月月度营收", "sub": "IR 日历已列 · Q3'26 法说会日期未官宣(惯例 10 月中 · 待补)" }
+      ] }
+    },
+    {
+      "type": "searchrow", "icon": "🔍", "title": "直达入口", "asof": "2026-07-19",
+      "data": { "chips": [
+        { "label": "NVDA 10-Q(EDGAR)", "url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q&dateb=&owner=include&count=10" },
+        { "label": "AMD 10-Q", "url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000002488&type=10-Q&dateb=&owner=include&count=10" },
+        { "label": "onsemi 10-Q", "url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001097864&type=10-Q&dateb=&owner=include&count=10" },
+        { "label": "MU 10-Q", "url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000723125&type=10-Q&dateb=&owner=include&count=10" },
+        { "label": "TSMC 库存天数(MacroMicro)", "url": "https://en.macromicro.me/series/2757/tw-2330_tw-days_of_inventory_original" },
+        { "label": "JPM 149天 报道", "url": "https://uk.finance.yahoo.com/news/jp-morgan-sees-semiconductor-sector-104700563.html" },
+        { "label": "𝕏 搜 semiconductor inventory days", "url": "https://x.com/search?q=semiconductor%20inventory%20days" },
+        { "label": "001 调研原文 · relation/N429(本地)" }
+      ] }
+    }
+  ]
+}

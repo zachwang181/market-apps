@@ -1,0 +1,91 @@
+/* ============================================================
+   节点专属 App · 通用壳样式(产品版 · site/apps/_tpl/)
+   来源:_design/_shared.css 模块样式产品化(JY 拍板 v1 抽屉 + tpl 模块库)
+   配色对齐 relation-explorer:bg #0c0c0e · 面板 #1c1b18 · 文字 #e8e5de
+   次要 #8a8478 · 强调 #c4a882 · 绿 #5ab07a · 红 #e07a7a
+   每个 app 只有 index.html + data.json · 本壳(css/js)全 app 共用
+   ============================================================ */
+*{box-sizing:border-box}
+html,body{margin:0;background:#0c0c0e;color:#d4d1ca;
+  font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif}
+body{padding:16px 18px 28px;max-width:760px;margin:0 auto}
+body.embed{padding:12px 14px 20px;max-width:none}   /* 抽屉 iframe 内:贴边 · 宽度交给抽屉 */
+.app-loading{color:#5a564c;font-size:12px;padding:30px 0;text-align:center}
+.app-err{color:#e07a7a;font-size:12.5px;line-height:1.7;border:1px dashed #6a3a3a;border-radius:9px;padding:12px 14px}
+
+/* ---- App 头(独立打开显 · embed 由抽屉头代劳,只显 asof/待补统计行) ---- */
+.appc{font-size:13px;line-height:1.55;color:#d4d1ca}
+.app-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px}
+.app-kind{font-size:10.5px;color:#0c0c0e;background:#c4a882;border-radius:5px;padding:1px 7px;font-weight:700;white-space:nowrap}
+.app-title{font-size:15px;font-weight:700;color:#f0ede6}
+.app-sub{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:10.5px;color:#5a564c;margin-top:4px}
+.app-node-chip{font-family:ui-monospace,Menlo,monospace;color:#9a9488;background:#1c1b18;border:1px solid #2e2d28;border-radius:5px;padding:0 6px}
+.app-pend-n{color:#e0b450}
+.sim-tag{font-size:10px;color:#e0b450;border:1px dashed #a98640;border-radius:5px;padding:0 5px;white-space:nowrap;flex:none}
+.pend-tag{font-size:10px;color:#e0b450;background:#2a2418;border:1px solid #a98640;border-radius:5px;padding:0 6px;font-weight:400;white-space:nowrap;flex:none}
+
+/* ---- 模块区块 ---- */
+.app-sec{margin-top:15px}
+.app-sec-h{font-size:11px;font-weight:700;color:#8a8478;letter-spacing:.05em;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.mod-asof{margin-left:auto;font-size:10px;color:#5a564c;font-weight:400;white-space:nowrap}
+.mod-srcs{display:flex;gap:9px;margin-top:6px;flex-wrap:wrap;font-size:10.5px}
+.mod-src{color:#8a8478;text-decoration:none;border-bottom:1px dashed #4a4740;cursor:pointer}
+.mod-src:hover{color:#c4a882;border-color:#c4a882}
+.mod-note{font-size:11px;color:#8a8478;margin-top:6px;line-height:1.6}
+
+/* 待补占位:骨架条 + 一句来源提示 · 不装满 */
+.mod-pending{border:1px dashed #3a3832;border-radius:9px;padding:13px 14px;background:rgba(22,22,19,.6)}
+.mp-bars{display:flex;flex-direction:column;gap:6px;margin-bottom:9px}
+.mp-bars i{display:block;height:9px;border-radius:4px;background:#22211d}
+.mp-bars i:nth-child(1){width:72%}
+.mp-bars i:nth-child(2){width:52%}
+.mp-bars i:nth-child(3){width:62%}
+.mp-t{font-size:11px;color:#8a8478}
+
+/* ① numcompare / ⑥ rawtable 共用表格 */
+.gtable-wrap{border:1px solid #2e2d28;border-radius:9px;overflow-x:auto;background:#161613}
+.gtable{width:100%;border-collapse:collapse;font-size:11.5px;min-width:330px}
+.gtable th{color:#8a8478;font-weight:500;text-align:left;padding:6px 7px;border-bottom:1px solid #2a2a26;font-size:11px;white-space:nowrap}
+.gtable td{padding:7px 7px;border-bottom:1px solid #22211d;color:#dcd8cf;white-space:nowrap}
+.gtable tr:last-child td{border-bottom:none}
+.gtable td:first-child{color:#9a9488}
+.beat{color:#5ab07a;font-weight:600}
+.miss{color:#e07a7a;font-weight:600}
+
+/* ② opinions */
+.bank-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:8px}
+.bank-card{background:#161613;border:1px solid #2e2d28;border-radius:9px;padding:8px 11px}
+.bank-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
+.bank-top b{color:#e8e5de;font-size:12.5px}
+.rating{font-size:11px;color:#8a8478;white-space:nowrap}
+.rating.up{color:#5ab07a}
+.rating.dn{color:#e07a7a}
+.bank-q{font-size:11.5px;color:#a8a49a;line-height:1.5}
+.bank-src{margin-top:5px;font-size:10.5px}
+
+/* ③ timeline */
+.tl-list{display:flex;flex-direction:column;gap:8px}
+.next-guid{background:#161613;border:1px solid #2e2d28;border-left:3px solid #c4a882;border-radius:9px;padding:10px 13px;display:flex;align-items:center;gap:12px;justify-content:space-between}
+.next-guid b{color:#e8e5de;font-size:13px}
+.ng-sub{font-size:11px;color:#8a8478;margin-top:2px}
+.ng-count{font-size:12px;color:#c4a882;border:1px solid #4a4436;background:#221f19;border-radius:8px;padding:3px 9px;white-space:nowrap;flex:none}
+
+/* ④ minichart:纯 CSS 横条 + inline SVG 折线 · 不引外部库 */
+.bars{display:flex;flex-direction:column;gap:5px}
+.bar-row{display:flex;align-items:center;gap:8px;font-size:11.5px}
+.bar-l{flex:none;width:64px;color:#9a9488;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;height:10px;background:#161613;border:1px solid #22211d;border-radius:5px;overflow:hidden}
+.bar-track i{display:block;height:100%;border-radius:4px}
+.bar-track i.up{background:#2f6a45}
+.bar-track i.dn{background:#6a3a3a}
+.bar-v{flex:none;min-width:48px;font-size:11px;white-space:nowrap}
+.sparkline{width:100%;max-width:260px;height:48px;display:block;background:#161613;border:1px solid #22211d;border-radius:8px;padding:4px}
+.sparkline polyline{fill:none;stroke:#5ab07a;stroke-width:2}
+
+/* ⑤ searchrow */
+.xrow{display:flex;gap:7px;flex-wrap:wrap}
+.xbtn{cursor:pointer;font-size:12px;background:#1c1c1f;border:1px solid #3a3832;color:#a8a49a;border-radius:8px;padding:5px 11px;user-select:none;white-space:nowrap}
+.xbtn:hover{border-color:#c4a882;color:#c4a882}
+a.xbtn{text-decoration:none;display:inline-block}
+.xbtn-dim{opacity:.55;cursor:default}
+.xbtn-dim:hover{border-color:#3a3832;color:#a8a49a}
